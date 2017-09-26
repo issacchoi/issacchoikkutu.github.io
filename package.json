@@ -1,0 +1,26 @@
+{
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "colors": "^1.1.2",
+    "compression": "^1.7.0",
+    "connect-redis": "^3.3.0",
+    "cron-parser": "^2.4.1",
+    "dddos": "^0.1.1",
+    "express": "^4.15.3",
+    "express-session": "^1.15.3",
+    "express-static-cache": "0.0.6",
+    "grunt": "^1.0.1",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-obfuscator": "^3.0.0",
+    "grunt-contrib-uglify": "^2.3.0",
+    "node-schedule": "^1.2.3",
+    "pg": "^6.4.1",
+    "pg-escape": "^0.2.0",
+    "pug": "^2.0.0-rc.2",
+    "redis": "^2.7.1",
+    "request": "^2.81.0",
+    "vhost": "^3.0.2",
+    "ws": "^1.1.1"
+  }
+}

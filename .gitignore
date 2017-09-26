@@ -2,3 +2,17 @@ Client/node_modules
 Server/run.bat
 Server/node_modules
 Server/lib/node_modules
+logs
+.idea
+Server/170407_old
+node_modules
+Web/game/lib/in_game_kkutu.js
+Web/game/public/js/*.min.js
+KKUTU_ERROR.log
+.ftpconfig
+Web/site/public/js/main.min.js
+Web/game/public/js/global.min.js
+Web/game/public/img/kkutu/moremi/hand/hand_handshake.png
+*.log
+logs*.egg
+db.sql

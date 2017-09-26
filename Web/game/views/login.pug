@@ -1,0 +1,41 @@
+include module
+
+doctype html
+html
+	head
+		title= L('title')
+		meta(charset='utf-8')
+		meta(name='viewport', content='width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no')
+		script(src="https://apis.google.com/js/api:client.js")
+		script(src="https://developers.kakao.com/sdk/js/kakao.min.js")
+		+PageHead()
+	body
+		span#locale= JSON.stringify(LANG)
+		span#stateKey= locals._id
+		span#before= locals.before
+		button.back(onclick="location.href='"+locals.before+"';") X
+		div.login-title KKUTU KOREA 로그인
+		button.with-naver
+			div.icon
+				img(src="/img/social/naver.png")
+			div.login-text= L('withNaver')
+		button.with-facebook
+			div.icon
+				img(src="/img/social/facebook.png")
+			div.login-text= L('withFacebook')
+		button.with-kakao
+			div.icon
+				img(src="/img/social/kakao.png")
+			div.login-text= L('withKakao')
+		button.with-twitter
+			div.icon
+				img(src="/img/social/twitter.png")
+			div.login-text= L('withTwitter')
+		button.with-google
+			div.icon
+				img(src="/img/social/google.png")
+			div.login-text= L('withGoogle')
+		//div#with-google(style='border-radius: 5px; margin: 8px auto; width: 210px; overflow: hidden;')
+		div.login-legal!= L('loginLegal')
+		div#fb-root
+		script(type='text/javascript', src='/js/facebook.js')

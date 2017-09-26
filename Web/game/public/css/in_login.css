@@ -1,0 +1,102 @@
+@import url(https://cdn.rawgit.com/openhiun/hangul/14c0f6faa2941116bb53001d6a7dcd5e82300c3f/nanumbarungothic.css);
+body{
+	background-color: #fff;
+	color: #000;
+	font-family: "Nanum Barun Gothic", "Malgun Gothic", sans-serif;
+	position: absolute;
+	top:50%;
+	left:50%;
+	transform: translate(-50%,-50%);
+	word-break:keep-all;
+}
+button{
+	margin: 20px auto;
+	width:100%;
+	max-width: 500px;
+	height:60px;
+	background: #fff;
+	cursor: pointer;
+	padding: 0;
+	border-radius: 30px;
+}
+.back{
+	width:inherit;
+	float:right;
+	border: inherit;
+	font-size:30px;
+	font-weight: bolder;
+	height: inherit;
+}
+.login-title{
+	padding-top: 30px;
+	margin: 30px 0px;
+	text-align: center;
+	font-size:60px;
+}
+button div{
+	display:inline-block;
+}
+.login-text{
+	font-size:25px;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 60px;
+}
+.icon{
+	float: left;
+	border-radius: 31px;
+	width:62px;
+	height:62px;
+	margin-left: -1px;
+	margin-top: -1px;
+}
+.icon img{
+	position: relative;
+	margin: 0 auto;
+	top:50%;
+	transform: translateY(-50%);
+}
+.with-naver{
+	color: #4FA42B;
+	border:2px solid #4FA42B;
+}
+.with-naver .icon{
+	background-color: #4FA42B;
+}
+.with-facebook{
+	color: #235EE3;
+	border:2px solid #235EE3;
+}
+.with-facebook .icon{
+	background-color: #235EE3;
+}
+.with-twitter{
+	color: #1DA1FE;
+	border:2px solid #1DA1FE;
+}
+.with-twitter .icon{
+	background-color: #1DA1FE;
+}
+.with-google{
+	color: #DD4B39;
+	border:2px solid #DD4B39;
+}
+.with-google .icon{
+	background-color: #DD4B39;
+}
+/*170413_CharX_KakaoLoginBtnAdd(s)*/
+.with-kakao{
+	color: #FFE812;
+	border:2px solid #FFE812;
+}
+/*170413_CharX_KakaoLoginBtnAdd(e)*/
+.with-kakao .icon{
+	background-color: #FFE812;
+}
+.login-legal{
+	padding-top: 50px;
+	color: #777;
+	font-size: 11px;
+	text-align: center;
+}
+.login-legal a{ color: #333; }

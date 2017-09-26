@@ -1,0 +1,233 @@
+#logo{
+	//margin-top: -20px;
+	margin-top: -5px;
+	height:90px;
+}
+#holder{
+	font-size:18px;
+	text-shadow:#000 0px 1px 5px;
+}
+#Background{
+	animation: BGScroll 4s linear infinite;
+}
+@keyframes BGScroll{
+	from{ background-position: 0px 0px; }
+	to{ background-position: -200px -200px; }
+}
+.banner {
+	float: left;
+	width:370px;
+	height:60px;
+}
+.centerlogo{
+	float:left;
+	text-align:center;
+	margin: 0px 40px
+}
+#game-start{
+	position:relative;
+	top:-74px;
+	margin-left:387px;
+	background:url('/img/kkutu/gamestart.png');
+	width:236px;
+	height:74px;
+	border:none;
+	padding:inherit;
+	transition:inherit;
+	z-index:2;
+	cursor: pointer;
+}
+#server-players,#server-refresh{
+	display:inline;
+	border-radius:10px;
+	width:80px;
+	height:14px;
+	text-align:center;
+	font-size:9px;
+	color:#000;
+	font-weight:bold;
+}
+#server-players{
+	float:left;
+	background:#96f4ff;
+}
+#server-refresh{
+	float:right;
+	background:#fff;
+	cursor: pointer;
+}
+.server-list{
+	position:relative;
+	width:100%;
+	margin: 7px 0px;
+	height:62px;
+	z-index:1;
+    background: rgba(255,255,255,0.5);
+    background: -webkit-radial-gradient(rgba(255,255,255,0), rgba(255,255,255,0.5));
+    background: -o-radial-gradient(#rgba(255,255,255,0),rgba(255,255,255,0.5));
+    background: -moz-radial-gradient(#rgba(255,255,255,0), rgba(255,255,255,0.5));
+    background: radial-gradient(#rgba(255,255,255,0), rgba(255,255,255,0.5));
+	border-radius:10px;
+}
+.server-item{
+	margin-left:30px;
+	width:90px;
+	height:100%;
+	display:inline-block;
+	cursor: pointer;
+	background:#fff;
+}
+.server-empty{
+	margin-left:27px;
+	width:233px;
+	display:inline-block;
+}
+.server-name{
+	font-family:'BMHANNA','배달의민족 한나', 'NanumBarunGothic';
+	width:100%;
+	text-align:center;
+	margin-top:5px;
+	font-size:24px;
+	color:#2665b9;
+}
+.server-enter{
+	font-family:'BMHANNA','배달의민족 한나', 'NanumBarunGothic';
+	width:100%;
+	text-align:center;
+	margin-top:-1px;
+	font-size:11px;
+	color:#2665b9;
+}
+.server-status{
+	height:15px;
+	background:#194c8f;
+	width:100%;
+}
+.server-status-text, .server-status-players{
+	margin:2px;
+}
+.server-status-text{
+	float:left;
+	display:inline;
+	font-size:9px;
+}
+.server-status-circle{
+	float:left;
+	border-radius: 6px; margin: 3px; width: 8px; height: 8px;
+	display:inline-block;
+}
+.server-status-players{
+	float:right;
+	display:inline;
+	font-size:9px;
+}
+.server-people{
+	height:5px;
+	background:#3a7dd6;
+}
+.graph{
+	box-shadow:inherit;
+}
+.server-people>.graph-bar{
+	background:#b3d4ff;
+}
+	.ss-o{ background-color: #3E3; }
+	.ss-p{ background-color: #EE3; }
+	.ss-q{ background-color: #F55; }
+	.ss-x{ background-color: #777; }
+	
+.panelTitle{
+	border-top-left-radius:10px;
+	border-top-right-radius:10px;
+	background:#82e6ec;
+	padding-top:5px;
+	text-align:center;
+	font-family:'BMHANNA','배달의민족 한나', 'NanumBarunGothic';
+	font-size:18px;
+	color:#2665b9;
+}
+.Panel{
+	border-radius:10px;
+	background:#fff;
+	height:350px;
+}
+.updatePanel{
+	display:inline-block;
+	width:260px;
+	float:left;
+}
+.centerPanel{
+	display:inline-block;
+	float:left;
+	margin-left:10px;
+	width:470px;
+}
+.rightPanel{
+	display:inline-block;
+	width:260px;
+	float:left;
+	margin-left:10px;
+}
+.warpPanel{
+	display:inline-block;
+	width:100%;
+	height:85px;
+}
+.warpContent{
+	display:inline-block;
+	margin-left:6px;
+	width:65px;
+	height:30px;
+	font-family:'BMHANNA','배달의민족 한나', 'NanumBarunGothic';
+	font-size:16px;
+	padding:5px;
+	text-align:center;
+	border-radius:10px;
+	word-break: keep-all;
+}
+.warpCafe{
+	background:#ff167e;
+}
+.warpDiscord{
+	background:#5782bd;
+}
+.warpFacebook{
+	background:#3c4376;
+}
+.bulletinPanel{
+	height:325px;
+	width:260px;
+}
+.facebookPanel{
+	height:260px;
+	margin-top:4px;
+}
+.centerImage{
+	display:block;
+	position:relative;
+}
+.centerImage-List{
+	position:relative;
+	top:-25px;
+	left:10px;
+}
+.centerImage-Item{
+	float:left;
+	border: solid rgba(0,0,0,0.8) 1px;
+	border-radius: 10px;
+	margin: 3px;
+	width: 10px;
+	height: 10px;
+	background:rgba(255,255,255,0.8);
+	cursor: pointer;
+}
+.centerImage-Item{
+	float:left;
+	border: solid rgba(0,0,0,0.8) 1px;
+	border-radius: 10px;
+	margin: 3px;
+	width: 10px;
+	height: 10px;
+	background:rgba(255,255,255,0.8);
+	cursor: pointer;
+}

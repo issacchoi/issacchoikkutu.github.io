@@ -1,0 +1,61 @@
+extends layout
+
+block Subject
+	title= L("title")
+	
+block CSS
+	link(rel="stylesheet", href="/css/in_game_kkutu.css")
+	script(async,src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js")
+	script.
+		(adsbygoogle = window.adsbygoogle || []).push({google_ad_client: "ca-pub-8808100690139777",enable_page_level_ads:true});
+
+block Middle
+	div(style="float: left; width: 100%;margin-top:15px;height:90px;")
+		a(href="https://goo.gl/forms/aBmFD0LbXHNq0ri42", target="_blank")
+			img.banner(src="/img/banner/requestbroadcast.png")
+		div.centerlogo
+			img#logo(src="/img/kkutu/short_logo_n.png")
+		a(href="https://oceanix.kr", target="_blank")
+			img.banner(src="/img/banner/oceanix.png")
+	div(style="float:left;width:100%;margin-top:-15px;")
+		span#server-players="총 0명 접속"
+		span#server-refresh="서버 새로고침"
+	div(style="float:left;width:100%;height:74px;")
+		div.server-list
+			div.server-item
+			div.server-item
+			div.server-item
+			div.server-empty
+			div.server-item
+			div.server-item
+			div.server-item
+		button#game-start
+	div(style="float:left;width:100%;margin-top:20px;")
+		div.updatePanel.Panel
+			div.panelTitle="업데이트 내역"
+			iframe.bulletinPanel(src="/kkutu_bulletin.html")
+		div.centerPanel.Panel
+			img.centerImage(src="/img/banner/cleanup.png", target="_blank")
+			img.centerImage(src="/img/banner/expandlevel.png", target="_blank")
+			img.centerImage(src="/img/banner/picturequiz.png", target="_blank")
+			div.centerImage-List
+		div.rightPanel
+			div.warpPanel.Panel
+				div.panelTitle="순간이동"
+				div(style="float:left;margin-top:10px;padding-left:5px;")
+					a(href="/facebook", target="_blank")
+						div.warpFacebook.warpContent="끄코 페이스북"
+					a(href="/discord", target="_blank")
+						div.warpDiscord.warpContent="끄코 디스코드"
+					a(href="/cafe", target="_blank")
+						div.warpCafe.warpContent="끄코 공식카페"
+			div.facebookPanel.Panel
+				.fb-page(data-href='https://www.facebook.com/kkutukorea/', data-width='260', data-height='260', data-tabs='timeline', data-small-header='true', data-adapt-container-width='true', data-hide-cover='false', data-show-facepile='true')
+					blockquote.fb-xfbml-parse-ignore(cite='https://www.facebook.com/kkutukorea/')
+						a(href='https://www.facebook.com/kkutukorea/')="끄투코리아"
+	+separator(10)
+	+Product("AD")
+		script(async,src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js")
+		ins.adsbygoogle(style="display:inline-block;width:728px;height:90px",data-ad-client="ca-pub-8383440458165932",data-ad-slot="5750994802")
+		script.
+			(adsbygoogle = window.adsbygoogle || []).push({});
