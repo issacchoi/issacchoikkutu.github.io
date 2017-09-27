@@ -4,7 +4,7 @@
 	"GLOBAL": {
 		"CREATOR": "글자로 놀자! 끄투 온라인 Copyright (C) 2017 Climax all rights reserved.",
 		"DICTIONARY": "사전 정보 제공:<a href='http://wordnet.princeton.edu' target='_blank'>WordNet</a><br><label style='color: #777777;'><a href='http://wordnet.princeton.edu' target='_blank'>WordNet</a> 3.0 Copyright 2006 by Princeton University. All rights reserved.</label>",
-		"LICENSE": "<div style='color: #666;'>This program comes with ABSOLUTELY NO WARRANTY.<br>This is free software, and you are welcome to redistribute it under certain conditions.<br>For details visit the repository of this software: <a target='_blank' href='{url of the source code of this server}'>{url of the source code of this server}</a></div>",
+		"GPL": "<div style='color: #666;'>This program comes with ABSOLUTELY NO WARRANTY.<br>This is free software, and you are welcome to redistribute it under certain conditions.<br>For details visit the repository of this software: <a target='_blank' href='{url of the source code of this server}'>{url of the source code of this server}</a></div>",
 		"GPL2": "<div style='color: #666;'>이 사이트는 <a target='_blank' href='http://kkutu.kr'>끄투(http://kkutu.kr)</a>의 소스코드를 기반으로 제작한 <a target='_blank' href='http://kkutu.co.kr'>끄투코리아(http://kkutu.co.kr)</a>의 <a target='_blank' href='https://github.com/Kim-Daewoon/KKuTu'>레포지토리(https://github.com/Kim-Daewoon/KKuTu)</a>를 사용하고 있습니다. 자세한 내용은 해당 레포지토리를 참고해 주십시오. <a target='_blank' href='{이 서버의 소스 코드 위치}'>{이 서버의 소스 코드 위치}</a></div>",
 		"CAFE":	"끄투 팬카페",
 		"DISCORD":	"디스코드",
