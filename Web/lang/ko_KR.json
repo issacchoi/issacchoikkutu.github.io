@@ -1,8 +1,8 @@
 {
 	"GLOBAL": {
-		"CREATOR": "글자로 놀자! 끄투 온라인 Copyright (C) 2017 Climax all rights reserved.",
 		"DICTIONARY": "한국어사전 정보 제공 : <a href='http://www.korean.go.kr' target='_blank'>국립국어원</a><br />영어사전 정보 제공:<a href='http://wordnet.princeton.edu' target='_blank'>WordNet</a><br><label style='color: #777777;'><a href='http://wordnet.princeton.edu' target='_blank'>WordNet</a> 3.0 Copyright 2006 by Princeton University. All rights reserved.</label>",
-		"LICENSE": "<div style='color: #666;'>이 프로그램은 제품에 대한 어떠한 형태의 보증도 제공되지 않으며 배포 규정을 만족시키는 조건 아래 자유롭게 재배포할 수 있습니다.<br>이에 대한 자세한 사항은 본 프로그램의 구현을 담은 다음 레포지토리에서 확인하십시오: <a target='_blank' href='https://github.com/Ganggroid/KKuTu-co-kr'>https://github.com/Ganggroid/KKuTu-co-kr</a></div>",
+		"LICENSE": "<div style='color: #666;'>이 프로그램은 제품에 대한 어떠한 형태의 보증도 제공되지 않으며 배포 규정을 만족시키는 조건 아래 자유롭게 재배포할 수 있습니다.<br>이에 대한 자세한 사항은 본 프로그램의 구현을 담은 다음 레포지토리에서 확인하십시오: <a target='_blank' href='{이 서버의 소스 코드 위치}'>{이 서버의 소스 코드 위치}</a></div>",
+		"GPL2": "<div style='color: #666;'>이 사이트는 <a target='_blank' href='http://kkutu.kr'>끄투(http://kkutu.kr)</a>의 소스코드를 기반으로 제작한 <a target='_blank' href='http://kkutu.co.kr'>끄투코리아(http://kkutu.co.kr)</a>의 <a target='_blank' href='https://github.com/Kim-Daewoon/KKuTu'>레포지토리(https://github.com/Kim-Daewoon/KKuTu)</a>를 사용하고 있습니다. 자세한 내용은 해당 레포지토리를 참고해 주십시오. <a target='_blank' href='{이 서버의 소스 코드 위치}'>{이 서버의 소스 코드 위치}</a></div>",
 		"CAFE":	"공식카페",
 		"DISCORD":	"디스코드",
 		"FACEBOOK":	"페이스북",
