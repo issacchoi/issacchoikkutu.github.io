@@ -1,7 +1,7 @@
 /**
 Rule the words! KKuTu Online
 Copyright (C) 2017 JJoriping(op@jjo.kr)
-Copyright (C) 2017 KKuTu Korea(op@kkutu.co.kr)
+Copyright (C) 2017-2018 KKuTu Korea(admin@kkutu.co.kr)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -175,7 +175,7 @@ exports.run = (Server, page) => {
 
 	// Fetch shop items
 	Server.get("/shop", (req, res) => {
-		MainDB.kkutu_shop.find().limit([ 'cost', true ], [ 'term', true ], [ 'group', true ], [ 'options', true ], [ 'updatedAt', true ])
+		MainDB.kkutu_shop.find().limit([ 'cost', true ], [ 'hit', true ], [ 'term', true ], [ 'group', true ], [ 'options', true ], [ 'updatedAt', true ])
 			.on($goods => res.json({ goods: $goods }));
 	});
 
@@ -253,7 +253,7 @@ exports.run = (Server, page) => {
 					res.send({error: 400});
 					return;
 				}
-				MainDB.session.update(['_id', req.session.id]).set(['nick', nick]).on();
+				//MainDB.users.update([ '_id', req.session.profile.id ]).set([ 'exordial', text ]).on(function($res){
 				MainDB.users.findOne(['_id', req.session.profile.id]).on($body => {
 					if (typeof $body.nick != 'undefined' && $body.nick != nick && typeof $body.kkutu.nickchangetime != 'undefined' &&
 						(now - $body.kkutu.nickchangetime) / 1000 < (86400 * 7))
@@ -262,13 +262,18 @@ exports.run = (Server, page) => {
 						if (typeof $body.nick != 'undefined' && $body.nick != nick ||
 							typeof $body.nick == 'undefined') {
 							$body.kkutu.nickchangetime = now;
-							req.session.nick = nick;
+							req.session.profile.nick = nick;
+							MainDB.session.update(['_id', req.session.id]).set(['profile', req.session.profile]).on();
 							MainDB.users.update(['_id', req.session.profile.id]).set(['exordial', text], ['kkutu',$body.kkutu], ['nick', nick])
 								.on($res => res.send({text: text}));
 						} else MainDB.users.update(['_id', req.session.profile.id]).set(['exordial', text])
 							.on($res => res.send({text: text}));
 					}
 				});
+				/*170406_CharX_NickChangeFeature(e)*/
+			} else MainDB.users.update(['_id', req.session.profile.id]).set(['exordial', text]).on($res => {
+				res.send({text: text});
+			});
 		}else res.send({ error: 400 });
 	});
 	Server.post("/newnick", (req, res) => {
@@ -292,7 +297,8 @@ exports.run = (Server, page) => {
 					res.send({error: 400});
 					return;
 				}
-				MainDB.session.update(['_id', req.session.id]).set(['nick', nick]).on();
+				req.session.profile.nick = nick;
+				MainDB.session.update(['_id', req.session.id]).set(['profile', req.session.profile]).on();
 				$body.kkutu.nickchangetime = now;
 				req.session.nick = nick;
 				MainDB.users.update(['_id', req.session.profile.id]).set(['kkutu',$body.kkutu], ['nick', nick ]).on($res => res.send());
