@@ -232,6 +232,8 @@ iframe{
 }
 	.RoomListBox div{ float: left; }
 	.RoomListBox .product-body{ width: 780px; height: 330px; overflow-x: hidden; overflow-y: scroll; }
+	body[theme="kkuko"] .rooms-item {background: url('/img/kkutu/room/normal_wait.png');}
+	body[theme="classic"] .rooms-item {background-color: #E4E4E4;}
 	.rooms-item{
 		padding: 5px;
 		border-radius: 10px;
@@ -240,34 +242,17 @@ iframe{
 		height: 64px;
 		box-shadow: 0px 1px 1px #777777;
 		cursor: pointer;
-		background: url('/img/kkutu/room/normal_wait.png');
 		transition: all 300ms ease;
 	}
 
-	.rooms-effect-staff {
-		background: url('/img/kkutu/room/staff_wait.png') !important;
-	}
-	.rooms-effect-staff-gaming {
-		background: url('/img/kkutu/room/staff_play.png') !important;
-	}
-	.rooms-effect-onlybeginner {
-		background: url('/img/kkutu/room/onlybeginner_wait.png') !important;
-	}
-	.rooms-effect-onlybeginner-gaming {
-		background: url('/img/kkutu/room/onlybeginner_play.png') !important;
-	}
-	.rooms-effect-gm {
-		background: url('/img/kkutu/room/gm_wait.png') !important;
-	}
-	.rooms-effect-gm-gaming {
-		background: url('/img/kkutu/room/gm_play.png') !important;
-	}
-	.rooms-effect-broadcast {
-		background: url('/img/kkutu/room/broadcast_wait.png') !important;
-	}
-	.rooms-effect-broadcast-gaming {
-		background: url('/img/kkutu/room/broadcast_play.png') !important;
-	}
+	body[theme="kkuko"] .rooms-effect-staff {background: url('/img/kkutu/room/staff_wait.png') !important;}
+	body[theme="kkuko"] .rooms-effect-staff-gaming {background: url('/img/kkutu/room/staff_play.png') !important;}
+	body[theme="kkuko"] .rooms-effect-onlybeginner {background: url('/img/kkutu/room/onlybeginner_wait.png') !important;}
+	body[theme="kkuko"] .rooms-effect-onlybeginner-gaming {background: url('/img/kkutu/room/onlybeginner_play.png') !important;}
+	body[theme="kkuko"] .rooms-effect-gm {background: url('/img/kkutu/room/gm_wait.png') !important;}
+	body[theme="kkuko"] .rooms-effect-gm-gaming {background: url('/img/kkutu/room/gm_play.png') !important;}
+	body[theme="kkuko"] .rooms-effect-broadcast {background: url('/img/kkutu/room/broadcast_wait.png') !important;}
+	body[theme="kkuko"] .rooms-effect-broadcast-gaming {background: url('/img/kkutu/room/broadcast_play.png') !important;}
 
 		.rooms-create{ background-color: #8EC0F3; }
 		.rooms-create>div{ float: none; padding: 20px 0px; text-align: center; font-size: 15px; font-weight: bold; }
@@ -285,7 +270,8 @@ iframe{
             .channel-10{ background-color: #ffeab6; }
             .channel-11{ background-color: #976a00; }
             .channel-12{ background-color: #000000; }
-		.rooms-gaming{ background: url('/img/kkutu/room/normal_play.png'); }
+		body[theme="kkuko"] .rooms-gaming{ background: url('/img/kkutu/room/normal_play.png'); }
+		body[theme="classic"] .rooms-gaming{ background-color: #FFBBBB; }
 			.rooms-gaming .rooms-number{ border-color: #CC9999; }
 		.rooms-item:hover{ background-color: #F4F4F4; }
 			.rooms-gaming:hover{ background-color: #FFCCCC; }
@@ -459,6 +445,7 @@ iframe{
 	}
 	#PQBar{
 		width:298px;
+		height:46px;
 	}
 	#PQCanvas{
 		float:left;
@@ -950,7 +937,8 @@ iframe{
 			padding: 1px 0px;
 			border: 1px solid #AAAAAA;
 			margin: 1px;
-			width: 40px;
+			/*width: 40px;*/
+			width: 36.4px;
 		}
 		.category-filter.selected{ color: #EEEEEE; background-color: #111111; }
 		.category-filter:hover{ background-color: #EEEEEE; }
@@ -1162,3 +1150,31 @@ iframe{
 		.competition-rank-entry > div:first-child { }
 		.competition-rank-entry {width: calc(100% - 10px);border-radius:10px;background-color: #EAEAEA;padding:5px;margin-bottom: 5px;}
 /*170425_CharX_Competition(e)*/
+
+#theme-classic{
+	background-image:url(/img/kkutu/theme_classic.png);
+}
+#theme-kkuko{
+	background-image:url(/img/kkutu/theme_kkuko.png);
+}
+.selectTheme{
+	background-repeat: no-repeat;
+	background-position: center;
+	text-align:center;
+	width:80px;
+	height:80px;
+	margin:15px 10px;
+	float:left;
+	border:5px #5E5E5E solid;
+	border-radius:0px;
+	font-size:15px;
+	font-weight: bold;
+	text-shadow: 0px 0px 15px #eee;
+}
+.leaderBoardNick{
+	display: inline-block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	width: 125px;
+}

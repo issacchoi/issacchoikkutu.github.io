@@ -1,7 +1,7 @@
 /**
 Rule the words! KKuTu Online
 Copyright (C) 2017 JJoriping(op@jjo.kr)
-Copyright (C) 2017 KKuTu Korea(op@kkutu.co.kr)
+Copyright (C) 2017-2018 KKuTu Korea(admin@kkutu.co.kr)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ var BEAT = [ null,
 	"11111111"
 ];
 var NULL_USER = {
-	profile: { title: L['null'] },
+	profile: { nick: L['null'] },
 	data: { score: 0 }
 };
 var MOREMI_PART;
@@ -59,7 +59,7 @@ var _setInterval = setInterval;
 var _setTimeout = setTimeout;
 
 function isStaff(o) {
-	return o.equip['BDG'] == 'b1_gm' || o.equip['BDG'] == 'b1_designer' || o.equip['BDG'] == 'b1_planner' || o.equip['BDG'] == 'b1_bgm' || o.equip['BDG'] == 'b1_video' || o.equip['BDG'] == 'b1_word';
+	return o.equip['BDG'] == 'b1_gm' || o.equip['BDG'] == 'b1_designer' || o.equip['BDG'] == 'b1_planner' || o.equip['BDG'] == 'b1_bgm' || o.equip['BDG'] == 'b1_video' || o.equip['BDG'] == 'b1_word' || o.equip['BDG'] == 'b1_giftbox';
 }
 
 function htmlEncode(value){

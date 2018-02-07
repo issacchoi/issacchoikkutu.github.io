@@ -1,7 +1,7 @@
 /**
 Rule the words! KKuTu Online
 Copyright (C) 2017 JJoriping(op@jjo.kr)
-Copyright (C) 2017 KKuTu Korea(op@kkutu.co.kr)
+Copyright (C) 2017-2018 KKuTu Korea(admin@kkutu.co.kr)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,14 +22,17 @@ module.exports = function(GameWeb, Parser, GLOBAL, REDIS_SESSION){
 	var Web		 = require("request");
 	var DDDoS	 = require("./dddos/index");
 	var DB		 = require("../sub/db");
-	var JAuth	 = require("../sub/jauth");
 	var JLog	 = require("../sub/jjlog");
 	JLog.init("game");
 	var WebInit	 = require("../sub/webinit");
 	var Const	 = require("../const");
 	var Cache    = require("express-static-cache");
 	var Path     = require('path');
+	/*170420_CharX_EnhancedAuth(s)*/
 	var crypto   = require('crypto');
+	/*170420_CharX_EnhancedAuth(e)*/
+	/*170510_CharX_Config(s)*/
+	/*170510_CharX_Config(e)*/
 	var Express = require('express');
 
 	var Compression = require('compression');
@@ -37,12 +40,16 @@ module.exports = function(GameWeb, Parser, GLOBAL, REDIS_SESSION){
 	var ErrorPage = require("./errorpage");
 	ErrorPage.init(GameWeb);
 
+	var passport = require('passport');
+	var https	 = require('https');
+	var fs		 = require('fs');
+
 	var Language = {
 		'ko_KR': require("./lang/ko_KR.json"),
 		'en_US': require("./lang/en_US.json")
 	};
 	var ROUTES = [
-		"major", "consume", "admin"
+		"major", "consume", "admin", "login", "word"
 	];
 	var page = WebInit.page;
 	var gameServers = [];
@@ -57,12 +64,45 @@ module.exports = function(GameWeb, Parser, GLOBAL, REDIS_SESSION){
 	require("../sub/checkpub");
 
 	JLog.info("<< KKuTu Web >> Port ["+GLOBAL.WEB_PORT+"]");
+	GameWeb.use(Compression());
 	GameWeb.set('views', __dirname + "/game/views");
 	GameWeb.set('view engine', "pug");
+	GameWeb.use(function(req, res, next) {
+		var tmpPROTOCOL = Const.IS_SECURED?"https:":"http:"
+		var allowedOrigins = [tmpPROTOCOL+GLOBAL.MAIN_DOMAIN, tmpPROTOCOL+GLOBAL.CDN_DOMAIN];
+		var origin = req.headers.origin;
+		if(allowedOrigins.indexOf(origin) > -1){
+			 res.setHeader('Access-Control-Allow-Origin', origin);
+		}
+		//res.header('Access-Control-Allow-Origin', allowedOrigins);
+		res.header("Access-Control-Allow-Headers", '*');
+		res.header('Access-Control-Allow-Methods', '*');
+		next();
+	});
+		GameWeb.use(Express.static(__dirname + "/game/public"));
 	GameWeb.use(Parser.json());
 	GameWeb.use(Parser.urlencoded({ extended: true, limit:'50mb' }));
+	GameWeb.use((req, res, next) => {
+		if(Const.IS_SECURED) {
+			if(req.protocol == 'http') {
+				let url = 'https://'+req.get('host')+req.path;
+				res.status(307).redirect(url);
+			} else {
+				next();
+			}
+		} else {
+			next();
+		}
+	});
 	GameWeb.use(REDIS_SESSION);
-	GameWeb.use(Compression());
+	GameWeb.use(passport.initialize());
+	GameWeb.use(passport.session());
+	GameWeb.use((req, res, next) => {
+		if(req.session.passport) {
+			delete req.session.passport;
+		}
+		next();
+	});
 	GameWeb.use(function(req, res, next) {
 		var ip = req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 		if (!ip) {
@@ -134,18 +174,24 @@ module.exports = function(GameWeb, Parser, GLOBAL, REDIS_SESSION){
 	Const.MAIN_PORTS.forEach(function(v, i){
 		var KEY = process.env['WS_KEY'];
 
-		gameServers[i] = new GameClient(KEY, `ws://127.0.0.2:${v}/${KEY}`);
+		var protocol;
+		if(Const.IS_SECURED) {
+			protocol = 'wss';
+		} else {
+			protocol = 'ws';
+		}
+		gameServers[i] = new GameClient(KEY, `${protocol}://127.0.0.2:${v}/${KEY}`);
 	});
 	function GameClient(id, url){
 		var my = this;
 
 		my.id = id;
-		my.socket = new WS(url, { perMessageDeflate: false });
+		my.socket = new WS(url, { perMessageDeflate: false, rejectUnauthorized: false});
 
 		my.send = function(type, data){
 			if(!data) data = {};
 			if(typeof my.socket == 'undefined')
-				my.socket = new WS(url, { perMessageDeflate: false });
+				my.socket = new WS(url, { perMessageDeflate: false, rejectUnauthorized: false});
 			data.type = type;
 
 			try {
@@ -201,24 +247,16 @@ module.exports = function(GameWeb, Parser, GLOBAL, REDIS_SESSION){
 		var server = req.query.server;
 		var before = req.query.before;
 
-		if(req.query.code){ // 네이버 토큰
-			req.session.authType = "naver";
-			req.session.token = req.query.code;
-			res.redirect("/register?before="+(before?before:"/"));
-		}else if(req.query.token){ // 페이스북 토큰
-			req.session.authType = "facebook";
-			req.session.token = req.query.token;
-			res.redirect("/register?before="+(before?before:"/"));
-		}else{
-			DB.session.findOne([ '_id', req.session.id ]).on(function($ses){
-				if(global.isPublic){
-					onFinish($ses);
-				}else{
-					if($ses) $ses.profile.sid = $ses._id;
-					onFinish($ses);
-				}
-			});
-		}
+		DB.session.findOne([ '_id', req.session.id ]).on(function($ses){
+			// var sid = (($ses || {}).profile || {}).sid || "NULL";
+			if(global.isPublic){
+				onFinish($ses);
+				// DB.jjo_session.findOne([ '_id', sid ]).limit([ 'profile', true ]).on(onFinish);
+			}else{
+				if($ses) $ses.profile.sid = $ses._id;
+				onFinish($ses);
+			}
+		});
 		function onFinish($doc){
 			var id = req.session.id;
 
@@ -230,10 +268,9 @@ module.exports = function(GameWeb, Parser, GLOBAL, REDIS_SESSION){
 			}
 			res.json({'_page': "kkutu",
 				'_id': id,
-				'_idconn': idEncrypt(id),
 				'PORT': Const.MAIN_PORTS[server],
 				'HOST': req.hostname,
-				'TEST': req.query.test,
+				'PROTOCOL': Const.IS_SECURED ? 'wss' : 'ws',
 				'MOREMI_PART': Const.MOREMI_PART,
 				'AVAIL_EQUIP': Const.AVAIL_EQUIP,
 				'CATEGORIES': Const.CATEGORIES,
@@ -252,44 +289,15 @@ module.exports = function(GameWeb, Parser, GLOBAL, REDIS_SESSION){
 	GameWeb.get("/", function(req, res){
 		var server = req.query.server;
 		var before = req.query.before;
-		if (req.session) {
-			var now = Date.now();
-			if (!req.session.lastmain) {
-				req.session.lastmain = now;
-				req.session.lastmaincount = 0;
-			}
-			var st = now - req.session.lastmain;
-			req.session.lastmain = now;
 
-			if(st <= 3000) req.session.lastmaincount++;
-			else if(st >= 8000) req.session.lastmaincount = 0;
-			if(req.session.lastmaincount >= 5) {
-				var ip = req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-				if (req.session.lastmaincount == 5)
-					JLog.warn("IP ["+ip+"] mainpage too frequent!!!", ip);
-				ErrorPage.send(req, res, 200);
-				return;
+		DB.session.findOne([ '_id', req.session.id ]).on(function($ses){
+			// var sid = (($ses || {}).profile || {}).sid || "NULL";
+				onFinish($ses);
+				// DB.jjo_session.findOne([ '_id', sid ]).limit([ 'profile', true ]).on(onFinish);
+				if($ses) $ses.profile.sid = $ses._id;
+				onFinish($ses);
 			}
-		}
-
-		if(req.query.code){ // 네이버 토큰
-			req.session.authType = "naver";
-			req.session.token = req.query.code;
-			res.redirect("/register?before="+(before?before:"/"));
-		}else if(req.query.token){ // 페이스북 토큰
-			req.session.authType = "facebook";
-			req.session.token = req.query.token;
-			res.redirect("/register?before="+(before?before:"/"));
-		}else{
-			DB.session.findOne([ '_id', req.session.id ]).on(function($ses){
-				if(global.isPublic){
-					onFinish($ses);
-				}else{
-					if($ses) $ses.profile.sid = $ses._id;
-					onFinish($ses);
-				}
-			});
-		}
+		});
 		function censor(censor) {
 			var i = 0;
 
@@ -321,9 +329,11 @@ module.exports = function(GameWeb, Parser, GLOBAL, REDIS_SESSION){
 				'PORT': Const.MAIN_PORTS[server],
 				'HOST': req.hostname,
 				'TEST': req.query.test,
+				'PROTOCOL': Const.IS_SECURED ? 'wss' : 'ws',
 				'MOREMI_PART': Const.MOREMI_PART,
 				'AVAIL_EQUIP': Const.AVAIL_EQUIP,
 				'CATEGORIES': Const.CATEGORIES,
+				'BGMCATEGORIES' : Const.BGMCATEGORIES,
 				'GROUPS': Const.GROUPS,
 				'MODE': Const.GAME_TYPE,
 				'RULE': Const.RULE,
@@ -336,8 +346,8 @@ module.exports = function(GameWeb, Parser, GLOBAL, REDIS_SESSION){
 				'GLOBAL': GLOBAL,
 				'ogImage': "http://kkutu.co.kr/kkutukorea.png",
 				'ogURL': "http://kkutu.co.kr/",
-				'ogTitle': "끄투코리아 - 끄투 온라인",
-				'ogDescription': "끄투 온라인 / 기상천외한 끝말잇기를 웹게임으로! / 끝말잇기,앞말잇기,십자말풀이,쿵쿵따,자음퀴즈,초성퀴즈,십자말풀이,가로세로,타자연습"
+				'ogTitle': "끄투",
+				'ogDescription': "끄투는 역시 끄투코리아에서 해야지! / 글자로 놀자! 끄투 온라인 / 기상천외한 끝말잇기를 웹게임으로! / 끝말잇기,앞말잇기,십자말풀이,쿵쿵따,자음퀴즈,초성퀴즈,십자말풀이,가로세로,타자연습,kkutu"
 			});
 		}
 	});
@@ -345,167 +355,9 @@ module.exports = function(GameWeb, Parser, GLOBAL, REDIS_SESSION){
 		var list = [];
 
 		gameServers.forEach(function(v, i){
-			list.push(v.seek);
+			/* if(v!=undefined&&v!=null&&v.seek!=undefined&&v.seek!=null)*/ list.push(v.seek);
 		});
 		res.send({ list: list, max: Const.KKUTU_MAX });
-	});
-
-	GameWeb.get("/login", function(req, res){
-		var before = req.query.before;
-		if(global.isPublic){
-			page(req, res, "login", { '_id': req.session.id, 'text': req.query.desc, "before":before });
-		}else{
-			var now = Date.now();
-			var id = req.query.id || "ADMIN";
-			var lp = {
-				id: id,
-				title: "LOCAL #" + id,
-				birth: [ 4, 16, 0 ],
-				_age: { min: 20, max: undefined }
-			};
-			DB.session.upsert([ '_id', req.session.id ]).set([ 'profile', JSON.stringify(lp) ], [ 'createdAt', now ]).on(function($res){
-				DB.users.update([ '_id', id ]).set([ 'lastLogin', now ]).on();
-				req.session.admin = true;
-				req.session.profile = lp;
-				res.redirect("/");
-			});
-		}
-	});
-	GameWeb.get("/logout", function(req, res){
-		var before = req.query.before;
-		if(!req.session.profile){
-			return res.redirect(before?before:"/");
-		}
-		JAuth.logout(req.session.profile).then(function(){
-			delete req.session.profile;
-			DB.session.remove([ '_id', req.session.id ]).on(function($res){
-				res.redirect(before?before:"/");
-			});
-		});
-	});
-	GameWeb.get("/register", function(req, res){
-		var before = req.query.before;
-		var ip = req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-		if(!req.session.token) return ErrorPage.send(req, res, 400);
-
-		JAuth.login(req.session.authType, req.session.token, req.session.id, req.session.token2).then(function($profile){
-			var now = Date.now();
-
-			if($profile.error) return ErrorPage.send(req, res, $profile.error);
-			if(!$profile.id) return ErrorPage.send(req, res, 401);
-
-			$profile.sid = req.session.id;
-			req.session.admin = GLOBAL.ADMIN.includes($profile.id);
-			DB.users.findOne([ '_id', $profile.id ]).on(function($body){
-				if (typeof $body != 'undefined') {
-					if (typeof $body.kkutu.nick != 'undefined' && $body.kkutu.nick.length > 0) {
-						if (typeof $profile.title != 'undefined') $profile.title = $body.kkutu.nick;
-						$profile.name = $body.kkutu.nick;
-					} else {
-						if (typeof $profile.title != 'undefined') $body.kkutu.nick = $profile.title;
-						else $body.kkutu.nick = $profile.name;
-						DB.users.update([ '_id', $profile.id ]).set([ 'kkutu', $body.kkutu ]).on();
-						JLog.info("User #" + $profile.id + " got initial nick "+$body.kkutu.nick);
-					}
-					if (typeof $body.kkutu.email == 'undefined' || $body.kkutu.email == 'undefined'){
-						$body.kkutu.email = $profile.email;
-						DB.users.update([ '_id', $profile.id ]).set([ 'kkutu', $body.kkutu ]).on();
-						JLog.info("User #" + $profile.id + " got email "+$body.kkutu.email);
-					}
-				}
-				JLog.log("IP ["+ip+"] User #" + $profile.id + " " + JSON.stringify($profile));
-				req.session.profile = $profile;
-
-				DB.users.update([ '_id', $profile.id ]).set([ 'lastLogin', now ]).on();
-				DB.session.upsert([ '_id', req.session.id ]).set({
-					'profile': $profile,
-					'createdAt': now
-				}).on();
-
-				res.redirect(before?before:"/");
-			});
-		});
-	});
-	GameWeb.post("/login/google", function(req, res){
-		req.session.authType = "google";
-		req.session.token = req.body.it;
-		req.session.token2 = req.body.at;
-		ErrorPage.send(req, res, 200);
-	});
-	GameWeb.post("/login/kakao", function(req, res){
-		req.session.authType = "kakao";
-		req.session.token = req.body.at;
-		req.session.token2 = "";
-		ErrorPage.send(req, res, 200);
-	});
-	GameWeb.get("/login/twitter_token", function(req, res){
-		var oauth = {
-			consumer_key: JAuth.TWITTER_KEY,
-			consumer_secret: JAuth.TWITTER_SECRET,
-		};
-		Web.post({
-			url:   'https://api.twitter.com/oauth/request_token',
-			oauth: oauth,
-			json:  true
-		}, function(e, r, query) {
-			var ret = {};
-			query.split("&").forEach(function(v) {
-				var vv = v.split("=");
-				ret[vv[0]] = vv[1];
-			});
-			if (typeof ret.oauth_token == 'undefined' || typeof ret.oauth_token_secret == 'undefined') {
-				ErrorPage.send(req, res, 400); return; }
-			res.redirect("https://api.twitter.com/oauth/authenticate?oauth_token="+ret.oauth_token);
-		});
-	});
-	GameWeb.get("/login/twitter", function(req, res) {
-		var oauth = {
-			consumer_key: JAuth.TWITTER_KEY,
-			consumer_secret: JAuth.TWITTER_SECRET,
-			token: req.query.oauth_token
-		};
-		Web.post({
-			url:   'https://api.twitter.com/oauth/access_token',
-			oauth: oauth,
-			json:  true,
-			form:  {
-				oauth_verifier: req.query.oauth_verifier
-			}
-		}, function(e, r, query) {
-			var ret = {};
-			query.split("&").forEach(function(v) {
-				var vv = v.split("=");
-				ret[vv[0]] = vv[1];
-			});
-			var oauth2 = {
-				consumer_key: JAuth.TWITTER_KEY,
-				consumer_secret: JAuth.TWITTER_SECRET,
-				token: ret.oauth_token,
-				token_secret: ret.oauth_token_secret
-			};
-			req.session.authType = "twitter";
-			req.session.token = ret.oauth_token;
-			req.session.token2 = ret.oauth_token_secret;
-			res.redirect("/register");
-		});
-	});
-	GameWeb.post("/session", function(req, res){
-		var o;
-
-		if(req.session.profile) res.json({
-			authType: req.session.authType,
-			createdAt: req.session.createdAt,
-			profile: {
-				id: req.session.profile.id,
-				image: req.session.profile.image,
-				name: req.session.profile.title || req.session.profile.name,
-				sex: req.session.profile.sex
-			}
-		});
-		else ErrorPage.send(req,res,404);
-	});
-	GameWeb.post("/session/set", function(req, res){
-		ErrorPage.send(req, res, 200);
 	});
 	GameWeb.get("/legal/:page", function(req, res){
 		page(req, res, "legal/"+req.params.page);

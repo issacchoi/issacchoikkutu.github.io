@@ -27,12 +27,17 @@ button{
 	font-weight: bolder;
 	height: inherit;
 }
+
+
 .login-title{
 	padding-top: 30px;
 	margin: 30px 0px;
 	text-align: center;
 	font-size:60px;
 }
+
+
+
 button div{
 	display:inline-block;
 }
@@ -100,3 +105,24 @@ button div{
 	text-align: center;
 }
 .login-legal a{ color: #333; }
+
+@media only screen and (max-width: 640px) {
+    .login-title {
+		font-size:42px;
+	}
+}
+
+@media only screen and (max-width: 480px) {
+    .login-title {
+		font-size:28px;
+	}
+	body {
+		min-width: 320px;
+	}
+	.login-text {
+		font-size: 16px;
+	}
+	.back {
+		font-size: 24px;
+	}
+}

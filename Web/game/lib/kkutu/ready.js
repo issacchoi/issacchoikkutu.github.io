@@ -1,7 +1,7 @@
 /**
 Rule the words! KKuTu Online
 Copyright (C) 2017 JJoriping(op@jjo.kr)
-Copyright (C) 2017 KKuTu Korea(op@kkutu.co.kr)
+Copyright (C) 2017-2018 KKuTu Korea(admin@kkutu.co.kr)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 $(document).ready(function(){
-
 	document.onkeyup = function(e){
 		if(e.keyCode == 231){
 			kkAlert("시스템 정책에 의해 연결이 끊어졌습니다. 카페에 문의해주세요.");
@@ -45,6 +44,7 @@ $(document).ready(function(){
 	$data._lastchat = "";
 	$data._tcnt = 0;
 	$data.usersR = {};
+	$data.users = {};
 	EXP.push(getRequiredScore(1));
 	for(i=2; i<MAX_LEVEL; i++){
 		EXP.push(EXP[i-2] + getRequiredScore(i));
@@ -88,6 +88,7 @@ $(document).ready(function(){
 		},
 		dialog: {
 			setting: $("#SettingDiag"),
+				settingTheme: $("#setting-theme"),
 				settingServer: $("#setting-server"),
 				settingOK: $("#setting-ok"),
 			community: $("#CommunityDiag"),
@@ -150,7 +151,13 @@ $(document).ready(function(){
 			obtain: $("#ObtainDiag"),
 				obtainOK: $("#obtain-ok"),
 			help: $("#HelpDiag"),
-			message: $("#MessageDiag")
+			message: $("#MessageDiag"),
+			notice: $("#NoticeDialog"),
+				noticeOK: $("#notice-ok"),
+				noticeNolook: $("#notice-nolook"),
+			theme: $("#ThemeSelectDialog"),
+				themeClassic: $("#theme-classic"),
+				themeKkuko: $("#theme-kkuko"),
 		},
 		box: {
 			chat: $(".ChatBox"),
@@ -180,6 +187,7 @@ $(document).ready(function(){
 		yell: $("#Yell").hide(),
 		balloons: $("#Balloons")
 	};
+	if(!$.cookie("nnl")) showDialog($stage.dialog.notice);
 	if(_WebSocket == undefined){
 		loading(L['websocketUnsupport']);
 		alert(L['websocketUnsupport']);
@@ -660,7 +668,7 @@ $(document).ready(function(){
 	});
 	$stage.menu.shop.on('click', function(e){
 		if($data._shop = !$data._shop){
-			loadShop();
+			loadShop("time");
 			$stage.menu.shop.addClass("toggled");
 		}else{
 			$stage.menu.shop.removeClass("toggled");
@@ -678,11 +686,22 @@ $(document).ready(function(){
 	$(".shop-type").on('click', function(e){
 		var $target = $(e.currentTarget);
 		var type = $target.attr('id').slice(10);
+		var searchVal = $("#shop-searchbox").val();
 
 		$(".shop-type.selected").removeClass("selected");
 		$target.addClass("selected");
 
-		filterShop(type == 'all' || $target.attr('value'));
+		filterShop(type == 'all' || $target.attr('value'), searchVal);
+	});
+	$("#shop-searchbox").on('keyup', function(e){
+		var $target = $(".shop-type.selected");
+		var type = $target.attr('id').slice(10);
+		var searchVal = $("#shop-searchbox").val();
+
+		$(".shop-type.selected").removeClass("selected");
+		$target.addClass("selected");
+
+		filterShop(type == 'all' || $target.attr('value'), searchVal);
 	});
 	$stage.menu.dict.on('click', function(e){
 		showDialog($stage.dialog.dict);
@@ -783,6 +802,18 @@ $(document).ready(function(){
 			drawLeaderboard(res);
 		});
 	});
+	$stage.dialog.settingTheme.on('click', function(e){
+		var o = $stage.dialog.theme;
+		o.parent().append(ov = $('<div />', {id:'setting-overlay',style:'position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.6;background:black;'}));
+		showDialog(o);
+		ov.show();
+	});
+	$stage.dialog.themeClassic.on('click', function(e){
+		changeTheme("classic");
+	});
+	$stage.dialog.themeKkuko.on('click', function(e){
+		changeTheme("kkuko");
+	});
 	$stage.dialog.settingServer.on('click', function(e){
 		location.href = "/";
 	});
@@ -799,7 +830,8 @@ $(document).ready(function(){
 			sb: $("#select-bgm").val(),
 			su: $("#sort-user").is(":checked"),
 			ow: $("#only-waiting").is(":checked"),
-			ou: $("#only-unlock").is(":checked")
+			ou: $("#only-unlock").is(":checked"),
+			theme: $data.opts.theme
 		});
 		$.cookie('kks', JSON.stringify($data.opts));
 		$stage.dialog.setting.hide();
@@ -972,21 +1004,34 @@ $(document).ready(function(){
 			reasonlist.push($(list[i]).attr("id").split("-")[2]);
 		reasonlist.push($("#report-reasonarea").val());
 		$data._report.reason = reasonlist.join();
-		if(reasonlist.length>0)
+		if(reasonlist.length>0){
 			send('report', $data._report);
-		delete $data._report;
-		$stage.dialog.report.hide();
+			kkAlert("신고가 접수되었습니다.");
+			delete $data._report;
+			$stage.dialog.report.hide();
+		}
+		else{
+			kkAlert("신고 사유를 1개 이상 체크해야 합니다.");
+			delete $data._report;
+			$stage.dialog.report.hide();
+		}
+ 	});
+	$stage.dialog.noticeOK.on('click', function(e){
+		$stage.dialog.notice.hide();
+    if($stage.dialog.noticeNolook.is(":checked")){
+			setCookieAt00( "nnl", "done" , 1);
+		}
  	});
 	$stage.dialog.profileShut.on('click', function(e){
 		var o = $data.users[$data._profiled];
 
 		if(!o) return;
-		toggleShutBlock(o.nick);
+		toggleShutBlock(o.profile.nick);
 	});
 	$stage.dialog.profileWhisper.on('click', function(e){
 		var o = $data.users[$data._profiled];
 
-		$stage.talk.val("/e " + o.nick.replace(/\s/g, "") + " ").focus();
+		$stage.talk.val("/e " + o.profile.nick.replace(/\s/g, "") + " ").focus();
 	});
 	$stage.dialog.profileDress.on('click', function(e){
 		// alert(L['error_555']);
@@ -1001,7 +1046,7 @@ $(document).ready(function(){
 	});
 	$stage.dialog.dressOK.on('click', function(e){
 		$(e.currentTarget).attr('disabled', true);
-		var curnick = $data.users[$data.id].nick;
+		var curnick = $data.users[$data.id].profile.nick;
 		var newnick = $("#dress-nick").val();
         newnick = newnick !== undefined ? newnick.trim() : "";
         if (newnick.length<2) {
@@ -1019,13 +1064,13 @@ $(document).ready(function(){
         }
 		var obj = { data: $("#dress-exordial").val(), nick: newnick };
 		if (!obj.nick || obj.nick.length == 0) delete obj.nick;
-		if (curnick == newnick || curnick != newnick && confirm('닉네임이 변경되었습니다. 정말로 바꾸시겠습니까?')) {
+		if (curnick == newnick || curnick != newnick && confirm('정말로 닉네임을 변경하시겠습니까?')) {
 			$.post("/exordial", obj, function(res){
 				$stage.dialog.dressOK.attr('disabled', false);
 				if(res.error) return fail(res.error);
 
 				var b = $data.users[$data.id];
-				b.nick = newnick;
+				b.profile.nick = newnick;
 				b.exordial = badWords($("#dress-exordial").val() || "");
 				updateMe();
 				requestProfile($data.id);

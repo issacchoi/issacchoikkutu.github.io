@@ -72,6 +72,7 @@ iframe{
 #ReadyBtn:hover, #ReadyBtn.toggled{
 	animation: none;
 }
+
 .product-body{ font-size: 12px; }
 .deltaScore{
 	width: 100%;
@@ -93,7 +94,7 @@ iframe{
 	border: none;
 	border-bottom-left-radius: 0px;
 	border-bottom-right-radius: 0px;
-	width: 100px;
+	width: 90px;
 	height: 20px;
 }
 	.kkutu-menu button:hover{
@@ -156,6 +157,9 @@ iframe{
 }
 	.ranking-me{ font-weight: bold; background-color: #DDDDDD; }
 	.ranking-image{ margin-right: 2px; width: 18px; height: 18px; }
+	.ranking-up{ font-weight:bold; color:blue; }
+	.ranking-down{ color:red; }
+
 	.ranking-1 td:first-child{ font-weight: bold; background-color: gold; }
 	.ranking-2 td:first-child{ font-weight: bold; background-color: silver; }
 	.ranking-3 td:first-child{ font-weight: bold; background-color: chocolate; }
@@ -222,13 +226,15 @@ iframe{
 		.users-name{ padding: 2px 0px 0px 3px; width: 147px; font-size: 13px; }
 		.users-item:hover{ cursor: pointer; background-color: #F4F4F4; }
 	.invite-item{ margin: 2px 0px; width: 100%; height: 20px; }
-		.invite-item .users-name{ width: 270px; }
+		.invite-item .users-name{ width: 240px; }
 .RoomListBox{
 	width: 790px;
 	height: 360px;
 }
 	.RoomListBox div{ float: left; }
 	.RoomListBox .product-body{ width: 780px; height: 330px; overflow-x: hidden; overflow-y: scroll; }
+	body[theme="kkuko"] .rooms-item {background: url('/img/kkutu/room/normal_wait.png');}
+	body[theme="classic"] .rooms-item {background-color: #E4E4E4;}
 	.rooms-item{
 		padding: 5px;
 		border-radius: 10px;
@@ -237,34 +243,17 @@ iframe{
 		height: 64px;
 		box-shadow: 0px 1px 1px #777777;
 		cursor: pointer;
-		background: url('/img/kkutu/room/normal_wait.png');
 		transition: all 300ms ease;
 	}
 
-	.rooms-effect-staff {
-		background: url('/img/kkutu/room/staff_wait.png') !important;
-	}
-	.rooms-effect-staff-gaming {
-		background: url('/img/kkutu/room/staff_play.png') !important;
-	}
-	.rooms-effect-onlybeginner {
-		background: url('/img/kkutu/room/onlybeginner_wait.png') !important;
-	}
-	.rooms-effect-onlybeginner-gaming {
-		background: url('/img/kkutu/room/onlybeginner_play.png') !important;
-	}
-	.rooms-effect-gm {
-		background: url('/img/kkutu/room/gm_wait.png') !important;
-	}
-	.rooms-effect-gm-gaming {
-		background: url('/img/kkutu/room/gm_play.png') !important;
-	}
-	.rooms-effect-broadcast {
-		background: url('/img/kkutu/room/broadcast_wait.png') !important;
-	}
-	.rooms-effect-broadcast-gaming {
-		background: url('/img/kkutu/room/broadcast_play.png') !important;
-	}
+	body[theme="kkuko"] .rooms-effect-staff {background: url('/img/kkutu/room/staff_wait.png') !important;}
+	body[theme="kkuko"] .rooms-effect-staff-gaming {background: url('/img/kkutu/room/staff_play.png') !important;}
+	body[theme="kkuko"] .rooms-effect-onlybeginner {background: url('/img/kkutu/room/onlybeginner_wait.png') !important;}
+	body[theme="kkuko"] .rooms-effect-onlybeginner-gaming {background: url('/img/kkutu/room/onlybeginner_play.png') !important;}
+	body[theme="kkuko"] .rooms-effect-gm {background: url('/img/kkutu/room/gm_wait.png') !important;}
+	body[theme="kkuko"] .rooms-effect-gm-gaming {background: url('/img/kkutu/room/gm_play.png') !important;}
+	body[theme="kkuko"] .rooms-effect-broadcast {background: url('/img/kkutu/room/broadcast_wait.png') !important;}
+	body[theme="kkuko"] .rooms-effect-broadcast-gaming {background: url('/img/kkutu/room/broadcast_play.png') !important;}
 
 		.rooms-create{ background-color: #8EC0F3; }
 		.rooms-create>div{ float: none; padding: 20px 0px; text-align: center; font-size: 15px; font-weight: bold; }
@@ -282,7 +271,8 @@ iframe{
             .channel-10{ background-color: #ffeab6; }
             .channel-11{ background-color: #976a00; }
             .channel-12{ background-color: #000000; }
-		.rooms-gaming{ background: url('/img/kkutu/room/normal_play.png'); }
+		body[theme="kkuko"] .rooms-gaming{ background: url('/img/kkutu/room/normal_play.png'); }
+		body[theme="classic"] .rooms-gaming{ background-color: #FFBBBB; }
 			.rooms-gaming .rooms-number{ border-color: #CC9999; }
 		.rooms-item:hover{ background-color: #F4F4F4; }
 			.rooms-gaming:hover{ background-color: #FFCCCC; }
@@ -295,25 +285,33 @@ iframe{
 			.rooms-round{ padding-top: 5px; margin-right: 10px; }
 			.rooms-time{ padding-top: 5px; }
 		.rooms-lock{ padding-top: 8px; width: 39px; text-align: center; font-size: 24px; }
-.ShopBox{
-	width: 790px;
-	height: 360px;
-}
-	.ShopBox div{ float: left; }
-	.ShopBox .product-body{ width: 780px; height: 330px; }
-.RoomBox{
-	width: 1000px;
-	height: 360px;
-}
-	.RoomBox .product-title{ height: 12px; }
-	.RoomBox .product-title h5{ float: left; }
-		.room-head-modified{ animation: ModifiedBlink 1s ease 3; }
-		.room-head-number{ width: 35px; text-align: center; }
-		.room-head-title{ font-weight: bold; width: 505px; }
-		.room-head-mode{ margin-right: 5px; width: 255px; text-align: right; }
-		.room-head-limit{ width: 70px; text-align: center; }
-		.room-head-round{ width: 70px; text-align: center; }
-		.room-head-time{ width: 54px; text-align: center; }
+	/*170414_CharX_Quest(s)*/
+	.QuestBox{
+		width: 790px;
+		height: 360px;
+	}
+		.QuestBox div{ float: left; }
+		.QuestBox .product-body{ width: 780px; height: 330px; }
+	/*170414_CharX_Quest(e)*/
+	.ShopBox{
+		width: 790px;
+		height: 360px;
+	}
+		.ShopBox div{ float: left; }
+		.ShopBox .product-body{ width: 780px; height: 330px; }
+	.RoomBox{
+		width: 1000px;
+		height: 360px;
+	}
+		.RoomBox .product-title{ height: 12px; }
+		.RoomBox .product-title h5{ float: left; }
+			.room-head-modified{ animation: ModifiedBlink 1s ease 3; }
+			.room-head-number{ width: 35px; text-align: center; }
+			.room-head-title{ font-weight: bold; width: 505px; }
+			.room-head-mode{ margin-right: 5px; width: 255px; text-align: right; }
+			.room-head-limit{ width: 70px; text-align: center; }
+			.room-head-round{ width: 70px; text-align: center; }
+			.room-head-time{ width: 54px; text-align: center; }
 	.team-selector{
 		float: left;
 		padding-right: 3px;
@@ -373,12 +371,10 @@ iframe{
 	.GameBox .product-title{ height: 12px; }
 	.GameBox .product-title h5{ float: left; }
 	.GameBox div{ float: left; }
-	.GameBox .wordspacecol{ float: left; }
-	.GameBox span {
-		position:relative;
-		top:5px; left:5px;
-		background-color:#5f5f5f;
-	}
+.GameBox span {
+	position:relative;
+	top:5px; left:5px;
+}
 	.GameBox .product-body{ padding-top: 0px; }
 	.game-replay-controller{ float: right !important; width: 100px; }
 	.game-replay-controller button{
@@ -447,6 +443,15 @@ iframe{
 		text-align: center;
 		text-shadow: 0px 1px 5px #141414;
 		background-image: url('/img/kkutu/lefthand.png');
+	}
+	#PQBar{
+		width:298px;
+	}
+	#PQCanvas{
+		float:left;
+		width:298px;
+		height:250px;
+		cursor: crosshair;
 	}
 	.jjoriping{ width: 500px; }
 	.cw.jjoriping,.pq.jjoriping{ margin-top: -10px; width: 322px; }
@@ -620,6 +625,166 @@ iframe{
 		margin: 0px -1px;
 		width: 992px;
 		height: 180px;
+	}
+	.game-user-pqturn{
+		padding: 1px 6px;
+		margin: 1px 0px;
+		font-size: 15px;
+		text-align: center;
+		font-weight: bold;
+		background-color: #03d95d;
+	}
+	.pqcmd{
+		border: 2px solid #000000;
+		border-radius: 10px;
+		background-color: #DEAF56
+	}
+	.pqcmd>div{
+		background-color: rgba(0, 0, 0, 0.7);
+		width:304px;
+		border-radius:10px;
+		padding:10px;
+	}
+	.pqcmd h3{
+		color:#fff;
+		margin-bottom:3px;
+	}
+	.pqColorList,.pqWidthList,.pqSpecialColorList,.pqNoSpecialColorList{
+		float:none !important;
+		padding:3px;
+		border-radius:5px;
+		background-color:#fff;
+		border: 1px solid #ddd;
+		margin-bottom:5px;
+	}
+	.pqNoSpecialColorList{
+		height: 13px;
+		width: 196px;
+		background-color: #696969;
+		color:#a2a2a2;
+		border: 1px solid #696969;
+		float: left!important;
+		margin-left: 5px;
+	}
+	.pqSpecialColorList{
+		height: 13px;
+		width: 196px;
+		background-color: #f6ff00;
+		border: 1px solid #e4ed00;
+		float: left!important;
+		margin-left: 5px;
+	}
+	.pqSpecialColorList>.pqColor {
+		margin-right:1px;
+	}
+	.pqColorList{
+		height: 13px;
+		width: 85px;
+		float: left!important;
+	}
+	.pqWidthList{
+		height: 25px;
+		width: 140px;
+	}
+	.pqColor {
+		border-radius:5px;
+		border: 2px solid #000;
+		width:9px;
+		height:9px;
+		margin-right:1px;
+		cursor: pointer;
+		display: inline-block;
+	}
+	.pqColor[color="black"]{
+		background-color:#000;
+	}
+	.pqColor[color="white"]{
+		background-color:#fff;
+	}
+	.pqColor[color="red"]{
+		background-color:#f00;
+	}
+	.pqColor[color="yellow"]{
+		background-color:#ff0;
+	}
+	.pqColor[color="green"]{
+		background-color:#0f0;
+	}
+	.pqColor[color="blue"]{
+		background-color:#00f;
+	}
+	.pqColor[color="darkred"]{
+		background-color:#910000;
+	}
+	.pqColor[color="orange"]{
+		background-color:#ff9000;
+	}
+	.pqColor[color="aqua"]{
+		background-color:#00ffe4;
+	}
+	.pqColor[color="purple"]{
+		background-color:#d400f4;
+	}
+	.pqColor[color="brightred"]{
+		background-color:#ff2390;
+	}
+	.pqColor[color="brightorange"]{
+		background-color:#ffe0cd;
+	}
+	.pqColor[color="indiago"]{
+		background-color:#0a00fe;
+	}
+	.pqColor[color="slightlybrightorange"]{
+		background-color:#ffb2b2;
+	}
+	.pqColor[color="mint"]{
+		background-color:#3dff81;
+	}
+	.pqColor[color="brightgray"]{
+		background-color:#dbdbdb;
+	}
+	.pqColor[color="slightlybrightgray"]{
+		background-color:#b6b6b6;
+	}
+	.pqColor[color="gray"]{
+		background-color:#8d8d8d;
+	}
+	.pqColor[color="slightlydarkgray"]{
+		background-color:#5c5c5c;
+	}
+	.pqColor[color="darkgray"]{
+		background-color:#343434;
+	}
+	.pqWidth{
+		cursor: pointer;
+		border-radius:5px;
+		border: 3px solid #000;
+		width:20px;
+		height:20px;
+		margin-right:2px;
+		vertical-align: middle;
+		line-height: 22px;
+		text-align: center;
+		display: inline-block;
+	}
+	.pqWidth[width="1"]{
+	}
+	.pqWidth[width="2"]{
+		font-size: 40px;
+		line-height: 30px !important;
+		font-weight:bold;
+	}
+	.pqWidth[width="3"]{
+		font-size: 12px;
+	}
+	.pqWidth[width="4"]{
+		font-size: 17px;
+	}
+	.pqWidth[width="5"]{
+		font-size: 22px;
+	}
+	.pqSelected{
+		border-color:#f00;
 	}
 	.cw.game-body,.pq.game-body{ position: relative; top: -378px; left: 660px; width: 334px; }
 		.game-user{
@@ -842,7 +1007,7 @@ iframe{
 	width: 100%;
 	overflow-y: scroll;
 }
-#Talk{
+.Xchar{
 	float: left;
 	border-right: none;
 	border-top-right-radius: 0px;
@@ -894,8 +1059,11 @@ iframe{
 			text-align: center;
 			cursor: pointer;
 		}
-			.chat-head:hover{ background-color: #FFF; }
+		.chat-head:hover{ background-color: #FFF; }
 		.chat-body{ float: left; width: calc(100% - 190px); min-height: 14px; }
+		.chat-head-observer,.chat-body-observer,.chat-head-spectate { color: #999999 !important; }
+		.chat-head-observer::before { content:'[옵저버]'; }
+		.chat-head-spectate::before { content:'[관전]'; }
 .ADBox{
 	width: 1000px;
 	box-shadow: 0px 1px 1px #141414;
@@ -953,4 +1121,31 @@ iframe{
 	0%		{ margin-top: -80px; font-size: 24px; opacity: 1; }
 	10%		{ margin-top: -90px; font-size: 30px; opacity: 0.9; }
 	100%	{ margin-top: -25px; font-size: 20px; opacity: 0.1; }
+}
+#theme-classic{
+	background-image:url(/img/kkutu/theme_classic.png);
+}
+#theme-kkuko{
+	background-image:url(/img/kkutu/theme_kkuko.png);
+}
+.selectTheme{
+	background-repeat: no-repeat;
+	background-position: center;
+	text-align:center;
+	width:80px;
+	height:80px;
+	margin:15px 10px;
+	float:left;
+	border:5px #5E5E5E solid;
+	border-radius:0px;
+	font-size:15px;
+	font-weight: bold;
+	text-shadow: 0px 0px 15px #eee;
+}
+.leaderBoardNick{
+	display: inline-block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	width: 125px;
 }

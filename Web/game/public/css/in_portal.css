@@ -1,8 +1,4 @@
-#logo{
-	//margin-top: -20px;
-	margin-top: -5px;
-	height:90px;
-}
+@import url(https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css);
 #holder{
 	font-size:18px;
 	text-shadow:#000 0px 1px 5px;
@@ -14,112 +10,139 @@
 	from{ background-position: 0px 0px; }
 	to{ background-position: -200px -200px; }
 }
+#kkuko-portal{
+	display: flex;
+  flex-flow: row wrap;
+}
+.kkutko-portal-leftpannel{
+	width:260px;
+}
+.kkutko-portal-rightpannel{
+	width:700px;
+	margin-left: 10px;
+}
+.kkutko-portal-subleftpannel{
+	margin-top: 5px;
+	float: left;
+	width:335px;
+}
+.kkutko-portal-subrightpannel{
+	margin-top: 5px;
+	margin-left: 5px;
+	float: left;
+	width:360px;
+}
 .banner {
 	float: left;
-	width:370px;
+	width: 360px;
 	height:60px;
+	margin-top: 5px;
 }
-.centerlogo{
+.mainlogo{
 	float:left;
 	text-align:center;
-	margin: 0px 40px
+	height:170px;
+	position: relative;
+	background-color: rgba(0,0,0,0.15)
+}
+#logo{
+	margin-top:30px;
+}
+#logotoptext{
+	position: absolute;
+	display: block;
+	font-family:'NanumSquare', 'NanumBarunGothic';
+	top:12px;
+	text-align: center;
+	width: 100%;
 }
 #game-start{
-	position:relative;
-	top:-74px;
-	margin-left:387px;
-	background:url('/img/kkutu/gamestart.png');
-	width:236px;
-	height:74px;
-	border:none;
-	padding:inherit;
-	transition:inherit;
+	background:url('/img/main/gamestart.png');
+	width:260px;
+	height:100px;
+	border:inherit;
+	padding: inherit;
+	transition: inherit;
 	z-index:2;
 	cursor: pointer;
+	border-radius: inherit;
 }
-#server-players,#server-refresh{
-	display:inline;
-	border-radius:10px;
-	width:80px;
-	height:14px;
-	text-align:center;
-	font-size:9px;
-	color:#000;
-	font-weight:bold;
+#kkuko-status{
+	margin-top:4px;
+	background-color: #3e729c;
+	height:20px;
 }
-#server-players{
-	float:left;
-	background:#96f4ff;
+#kkuko-status-players, #kkuko-status-refresh{
+	line-height: 20px;
+	float: left;
+	font-family:'NanumSquare', 'NanumBarunGothic';
+	display: block;
+	text-align: center;
+	font-size:0.8rem;
 }
-#server-refresh{
-	float:right;
-	background:#fff;
+#kkuko-status-players{
+	width: 180px;
+}
+#kkuko-status-refresh{
 	cursor: pointer;
+	color:#3e719c;
+	background-color: #fff;
+	width: 80px;
 }
-.server-list{
-	position:relative;
-	width:100%;
-	margin: 7px 0px;
-	height:62px;
-	z-index:1;
-    background: rgba(255,255,255,0.5);
-    background: -webkit-radial-gradient(rgba(255,255,255,0), rgba(255,255,255,0.5));
-    background: -o-radial-gradient(#rgba(255,255,255,0),rgba(255,255,255,0.5));
-    background: -moz-radial-gradient(#rgba(255,255,255,0), rgba(255,255,255,0.5));
-    background: radial-gradient(#rgba(255,255,255,0), rgba(255,255,255,0.5));
-	border-radius:10px;
+#server-list{
+	width:260px;
 }
 .server-item{
-	margin-left:30px;
-	width:90px;
-	height:100%;
-	display:inline-block;
+	width:100%;
+	height:50px;
 	cursor: pointer;
-	background:#fff;
+	background-color:rgba(0,0,0,0.5);
+	margin-top:4px;
 }
-.server-empty{
-	margin-left:27px;
-	width:233px;
-	display:inline-block;
+.server-status-bar{
+	float:left;
+	height:100%;
+	margin-left: 5px;
+	width: 8px;
+}
+	.ssb-o{ background-color: #01d4f4; }
+	.ssb-p{ background-color: #00ff96; }
+	.ssb-q{ background-color: #fff000; }
+	.ssb-r{ background-color: #ff004e; }
+	.ssb-x{ background-color: #454545; }
+
+	.sss-o{ color: #01d4f4; }
+	.sss-p{ color: #00ff96; }
+	.sss-q{ color: #fff000; }
+	.sss-r{ color: #ff004e; }
+	.sss-x{ color: #454545; }
+.server-head{
+	float: left;
+	font-family:'NanumSquare', 'NanumBarunGothic';
+	font-size:1.3rem;
+	color:#fff;
+	margin-top:7px;
 }
 .server-name{
-	font-family:'BMHANNA','배달의민족 한나', 'NanumBarunGothic';
-	width:100%;
-	text-align:center;
-	margin-top:5px;
-	font-size:24px;
-	color:#2665b9;
+	font-weight: 800;
+	float:left;
+	margin-left: 5px;
 }
 .server-enter{
-	font-family:'BMHANNA','배달의민족 한나', 'NanumBarunGothic';
-	width:100%;
-	text-align:center;
-	margin-top:-1px;
-	font-size:11px;
-	color:#2665b9;
+	float:left;
+	font-weight: 400;
+	margin-left: 5px;
 }
 .server-status{
-	height:15px;
-	background:#194c8f;
-	width:100%;
+	height: 12px;
+	width: calc(100% - 13px);
+	float: left;
+	font-size:0.7rem;
+	font-weight: 700;
 }
 .server-status-text, .server-status-players{
-	margin:2px;
-}
-.server-status-text{
+	margin-left:5px;
 	float:left;
-	display:inline;
-	font-size:9px;
-}
-.server-status-circle{
-	float:left;
-	border-radius: 6px; margin: 3px; width: 8px; height: 8px;
-	display:inline-block;
-}
-.server-status-players{
-	float:right;
-	display:inline;
-	font-size:9px;
 }
 .server-people{
 	height:5px;
@@ -131,59 +154,63 @@
 .server-people>.graph-bar{
 	background:#b3d4ff;
 }
-	.ss-o{ background-color: #3E3; }
-	.ss-p{ background-color: #EE3; }
-	.ss-q{ background-color: #F55; }
-	.ss-x{ background-color: #777; }
-	
+.panelHead{
+	background:#fff;
+	font-family:'NanumSquare', 'NanumBarunGothic';
+	color:#3e719c;
+	height: 20px;
+}
 .panelTitle{
-	border-top-left-radius:10px;
-	border-top-right-radius:10px;
-	background:#82e6ec;
-	padding-top:5px;
-	text-align:center;
-	font-family:'BMHANNA','배달의민족 한나', 'NanumBarunGothic';
-	font-size:18px;
-	color:#2665b9;
+	font-weight: 800;
+	display: block;
+	float: left;
+	margin-left: 3px;
+}
+.panelSubTitle{
+	font-weight: 300;
+	display: block;
+	float: left;
+	font-size: 0.8rem;
+	margin-top: 5px;
 }
 .Panel{
-	border-radius:10px;
-	background:#fff;
-	height:350px;
+	float:left;
+	background-color: rgba(0,0,0,0.5);
+}
+.noticePanel{
+	width:335px;
+	height: 100px;
 }
 .updatePanel{
-	display:inline-block;
-	width:260px;
-	float:left;
-}
-.centerPanel{
-	display:inline-block;
-	float:left;
-	margin-left:10px;
-	width:470px;
-}
-.rightPanel{
-	display:inline-block;
-	width:260px;
-	float:left;
-	margin-left:10px;
+	width:335px;
+	height: 290px;
+	margin-top: 5px;
 }
 .warpPanel{
-	display:inline-block;
-	width:100%;
-	height:85px;
+	width:360px;
+	height:70px;
+}
+.warpList{
+
+}
+.warpContent span{
+	display: block;
+}
+.warpContent img{
+	height: 24px;
+	margin-top: 5px;
 }
 .warpContent{
-	display:inline-block;
+	display:block;
 	margin-left:6px;
 	width:65px;
-	height:30px;
-	font-family:'BMHANNA','배달의민족 한나', 'NanumBarunGothic';
-	font-size:16px;
-	padding:5px;
+	height:50px;
+	float: left;
+	font-family:'NanumSquare', 'NanumBarunGothic';
+	font-size:0.8rem;
 	text-align:center;
-	border-radius:10px;
-	word-break: keep-all;
+	background-color: #53616c;
+	font-weight: 700;
 }
 .warpCafe{
 	background:#ff167e;
@@ -195,33 +222,30 @@
 	background:#3c4376;
 }
 .bulletinPanel{
-	height:325px;
-	width:260px;
+	height:270px;
+	width:330px;
 }
-.facebookPanel{
-	height:260px;
+.youtubePanel{
+	width: 360px;
+	height:195px;
 	margin-top:4px;
 }
-.centerImage{
+.slidePanel{
+	width: 700px;
+	height: 270px;
+}
+.slideImage{
+	width: 700px;
+	height: 270px;
 	display:block;
 	position:relative;
 }
-.centerImage-List{
+.slideImage-List{
 	position:relative;
 	top:-25px;
 	left:10px;
 }
-.centerImage-Item{
-	float:left;
-	border: solid rgba(0,0,0,0.8) 1px;
-	border-radius: 10px;
-	margin: 3px;
-	width: 10px;
-	height: 10px;
-	background:rgba(255,255,255,0.8);
-	cursor: pointer;
-}
-.centerImage-Item{
+.slideImage-Item{
 	float:left;
 	border: solid rgba(0,0,0,0.8) 1px;
 	border-radius: 10px;

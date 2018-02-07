@@ -796,7 +796,7 @@ iframe{
 		}
 		.chat-body{ float: left; width: calc(100% - 190px); min-height: 14px; }
 .ADBox{
-	width: 1000px;
+	width: calc(100% - 10px) !important;
 	box-shadow: 0px 1px 1px #141414;
 	background-color: #232323;
 }
@@ -806,7 +806,7 @@ iframe{
 	background-color: inherit;
 }
 .ADBox .product-body{
-	padding-left: 131px;
+	padding: 0 auto;
 }
 
 
@@ -837,4 +837,24 @@ iframe{
 @keyframes ScoreGoing{
 	0%		{ opacity: 1; }
 	100%	{ opacity: 0; }
+}
+#theme-classic{
+	background-image:url(/img/kkutu/theme_classic.png);
+}
+#theme-kkuko{
+	background-image:url(/img/kkutu/theme_kkuko.png);
+}
+.selectTheme{
+	background-repeat: no-repeat;
+	background-position: center;
+	text-align:center;
+	width:80px;
+	height:80px;
+	margin:15px 10px;
+	float:left;
+	border:5px #5E5E5E solid;
+	border-radius:0px;
+	font-size:15px;
+	font-weight: bold;
+	text-shadow: 0px 0px 15px #eee;
 }

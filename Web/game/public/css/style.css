@@ -3,10 +3,10 @@
   font-style: normal;
   font-weight: 300;
   src: local('Nanum Barun Gothic Light'), local('Nanum Barun Gothic-Light'), local('NanumBarunGothic Light');
-  src: url(//cdn.rawgit.com/openhiun/hangul/14c0f6faa2941116bb53001d6a7dcd5e82300c3f/NanumBarunGothicLight.eot);
-  src: url(//cdn.rawgit.com/openhiun/hangul/14c0f6faa2941116bb53001d6a7dcd5e82300c3f/NanumBarunGothicLight.eot?#iefix) format('embedded-opentype'),
-       url(//cdn.rawgit.com/openhiun/hangul/14c0f6faa2941116bb53001d6a7dcd5e82300c3f/NanumBarunGothicLight.woff) format('woff'),
-       url(//cdn.rawgit.com/openhiun/hangul/14c0f6faa2941116bb53001d6a7dcd5e82300c3f/NanumBarunGothicLight.ttf) format('truetype');
+  src: url(../media/NanumBarunGothicLight.eot);
+  src: url(../media/NanumBarunGothicLight.eot?#iefix) format('embedded-opentype'),
+       url(../media/NanumBarunGothicLight.woff) format('woff'),
+       url(../media/NanumBarunGothicLight.ttf) format('truetype');
 }
 
 @font-face {
@@ -14,10 +14,10 @@
   font-style: normal;
   font-weight: 400;
   src: local('Nanum Barun Gothic Regular'), local('Nanum Barun Gothic-Regular'), local('NanumBarunGothic Regular');
-  src: url(//cdn.rawgit.com/openhiun/hangul/14c0f6faa2941116bb53001d6a7dcd5e82300c3f/NanumBarunGothic.eot);
-  src: url(//cdn.rawgit.com/openhiun/hangul/14c0f6faa2941116bb53001d6a7dcd5e82300c3f/NanumBarunGothic.eot?#iefix) format('embedded-opentype'),
-       url(//cdn.rawgit.com/openhiun/hangul/14c0f6faa2941116bb53001d6a7dcd5e82300c3f/NanumBarunGothic.woff) format('woff'),
-       url(//cdn.rawgit.com/openhiun/hangul/14c0f6faa2941116bb53001d6a7dcd5e82300c3f/NanumBarunGothic.ttf) format('truetype');
+  src: url(../media/NanumBarunGothic.eot);
+  src: url(../media/NanumBarunGothic.eot?#iefix) format('embedded-opentype'),
+       url(../media/NanumBarunGothic.woff) format('woff'),
+       url(../media/NanumBarunGothic.ttf) format('truetype');
 }
 
 @font-face {
@@ -136,27 +136,39 @@ span{
 }
 	.autocomp-item{ margin: 1px 0px; }
 	.autocomp-item:hover, .autocomp-select{ color: #FFFFFF; background-color: rgba(50, 50, 50, 0.8); }
-#account{ float: right; margin: 1px; font-size: 11px; color: #fff; }
+body[theme="kkuko"] #account{ float: right; color: #fff; height: 50px;}
+body[theme="classic"] #account{ float: right; color: #fff; height: 30px;}
 #account-setting{
 	float: left;
 	padding-top: 8px;
 	width: 50px;
 	text-align: center;
 }
+body[theme="kkuko"] #account-info{margin:10px 5px;}
+body[theme="classic"] #account-info{margin:3px 1.5px;}
 #account-info{
 	float: left;
-	width: 80px;
-	text-align: center;
+	text-align: right;
 	cursor: pointer;
 	transition: color 300ms ease;
-	margin:13px 25px;
-	color:#fff;
-	font-size:20px;
 }
 #account-info:hover{ color: #EEEEEE; }
+.logined .account-nick{
+  margin-top: 6px;
+}
+.logined .account-desc{
+  display: none;
+}
+body[theme="kkuko"] .account-nick {font-weight: bold;font-size:1.2rem;}
+body[theme="classic"] .account-nick {font-weight: bold;font-size:0.6rem;}
+body[theme="kkuko"] .account-desc {font-size:0.5rem;color:#eaff00;}
+body[theme="classic"] .account-desc {font-size:0.3rem;color:#eaff00;}
+body[theme="classic"] .account-moremi{height:30px;}
+
+body[theme="kkuko"] #global-notice,#global-notice{margin-top: 50px;}
+body[theme="classic"] #global-notice{margin-top: 30px;}
 #global-notice{
 	padding: 3px 0px;
-	margin-top: 50px;
 	color: #111111;
 	text-align: center;
 	font-weight: bold;
@@ -278,16 +290,18 @@ span{
 .auto-item:hover{ background-color: #333333; }
 .auto-selected{ color: #EEEE44; background-color: #3B3B3B; }
 
+body[theme="kkuko"] #Top, #Top{height: 50px;}
+body[theme="classic"] #Top{height: 30px;}
 #Top{
 	position: fixed;
 	width: 100%;
-	height: 50px;
 	box-shadow: 0px 2px 2px #000;
 	z-index: 5;
 }
+body[theme="kkuko"] #Middle, #Middle{margin-top:75px;}
+body[theme="classic"] #Middle{margin-top:50px;}
 #Middle{
 	float: left;
-	margin-top: 70px;
 	width: 1010px;
 }
 #Bottom{
@@ -299,13 +313,9 @@ span{
 }
 .bottom-legal{
 	margin-top: 10px;
-	color: #CCCCCC;
+	color: #888;
 }
 	.bottom-legal a{ padding: 0px 5px; }
-.bottom-contact{
-	color: #777777;
-	font-weight: bold;
-}
 
 /* 설명 */
 #ExplBox{
@@ -361,6 +371,7 @@ code{
 .tier-D{ color: #96C7F9; text-shadow: 0px 0px 3px #88BBEE; }
 .tier-M{ color: #2AC9AF; text-shadow: 0px 0px 5px #11AA88; }
 .tier-C{ color: #2EFFDF; text-shadow: 0px 0px 5px #1072AA; }
+body[theme="classic"] .homeBtn{display: none;}
 .homeBtn{
 	float: left;
 	display: inline-block;
@@ -376,6 +387,15 @@ code{
 	font-size:20px;
     cursor: pointer;
 }
+
+body[theme="kkuko"] .logoTop, .logoTop{left:0;right:0;}
+body[theme="classic"] .logoTop{height:20px;margin:5px 25px;position:initial;left:initial;right:initial;}
+.logoTop{
+  cursor: pointer;
+  float: left;
+}
+body[theme="classic"] .Menu > .container {width: initial;}
+body[theme="classic"] .container {margin-right: initial; margin-left: initial; padding-left: initial; padding-right: initial;}
 @media (min-width: 768px){
 	.Menu > .container {
 		width: 750px;

@@ -1,7 +1,7 @@
 /**
 Rule the words! KKuTu Online
 Copyright (C) 2017 JJoriping(op@jjo.kr)
-Copyright (C) 2017 KKuTu Korea(op@kkutu.co.kr)
+Copyright (C) 2017-2018 KKuTu Korea(admin@kkutu.co.kr)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

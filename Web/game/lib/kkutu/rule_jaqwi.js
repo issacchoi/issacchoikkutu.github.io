@@ -1,7 +1,7 @@
 /**
 Rule the words! KKuTu Online
 Copyright (C) 2017 JJoriping(op@jjo.kr)
-Copyright (C) 2017 KKuTu Korea(op@kkutu.co.kr)
+Copyright (C) 2017-2018 KKuTu Korea(admin@kkutu.co.kr)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 $lib.Jaqwi.roundReady = function(data){
 	var tv = L['jqTheme'] + ": " + L['theme_' + data.theme];
-	
+
 	clearBoard();
 	$data._roundTime = $data.room.time * 1000;
 	$data._fastTime = 10000;
@@ -47,15 +47,15 @@ $lib.Jaqwi.turnGoing = function(){
 	var $rtb = $stage.game.roundBar;
 	var bRate;
 	var tt;
-	
+
 	if(!$data.room) clearInterval($data._tTime);
 	$data._roundTime -= TICK;
-	
+
 	tt = $data._spectate ? L['stat_spectate'] : ($data._roundTime*0.001).toFixed(1) + L['SECOND'];
 	$rtb
 		.width($data._roundTime/$data.room.time*0.1 + "%")
 		.html(tt);
-		
+
 	if(!$rtb.hasClass("round-extreme")) if($data._roundTime <= $data._fastTime){
 		bRate = $data.bgm.currentTime / $data.bgm.duration;
 		if($data.bgm.paused) stopBGM();

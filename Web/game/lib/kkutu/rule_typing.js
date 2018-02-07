@@ -1,7 +1,7 @@
 /**
 Rule the words! KKuTu Online
 Copyright (C) 2017 JJoriping(op@jjo.kr)
-Copyright (C) 2017 KKuTu Korea(op@kkutu.co.kr)
+Copyright (C) 2017-2018 KKuTu Korea(admin@kkutu.co.kr)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 ﻿$lib.Typing.roundReady = function(data){
 	var i, len = $data.room.game.title.length;
 	var $l;
-	
+
 	$data._chatter = mobile ? $stage.game.hereText : $stage.talk;
 	clearBoard();
 	$data._round = data.round;
@@ -44,7 +44,7 @@ function drawList(){
 	var lv = $data.room.opts.proverb ? 1 : 5;
 	var pts = "";
 	var w0l = wl[0].length;
-	
+
 	if(w0l >= 20) pts = "18px";
 	if(w0l >= 50) pts = "15px";
 	$stage.game.display.css('font-size', pts);
@@ -88,7 +88,7 @@ $lib.Typing.turnEnd = function(id, data){
 		.addClass("deltaScore")
 		.html("+" + data.score);
 	var $uc = $("#game-user-" + id);
-	
+
 	if(data.error){
 		$data.chain++;
 		drawList();
@@ -122,7 +122,7 @@ function restGoing(rest){
 }
 function drawSpeed(table){
 	var i;
-	
+
 	for(i in table){
 		$("#game-user-" + i + " .game-user-score").empty()
 			.append($("<div>").css({ 'float': "none", 'color': "#4444FF", 'text-align': "center" }).html(table[i] + "<label style='font-size: 11px;'>" + L['kpm'] + "</label>"));

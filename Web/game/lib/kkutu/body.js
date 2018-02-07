@@ -1,7 +1,7 @@
 /**
 Rule the words! KKuTu Online
 Copyright (C) 2017 JJoriping(op@jjo.kr)
-Copyright (C) 2017 KKuTu Korea(op@kkutu.co.kr)
+Copyright (C) 2017-2018 KKuTu Korea(admin@kkutu.co.kr)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -62,20 +62,26 @@ function showDialog($d, noToggle){
 		return true;
 	}
 }
+function changeTheme(theme){
+	$("#setting-overlay").remove();
+	$stage.dialog.theme.hide();
+	$data.opts.theme=theme;
+	$.cookie('kks', JSON.stringify($data.opts));
+	setTheme(theme);
+}
+
 function applyOptions(opt){
 	$data.opts = opt;
 
 	$data.volumeBGM = $data.opts.vb === undefined ? 1 : $data.opts.vb;
 	$data.volumeEff = $data.opts.ve === undefined ? 1 : $data.opts.ve;
 	$data.optbag = $data.opts.bag === undefined ? true : $data.opts.bag;
-	$data.optbaa = $data.opts.baa === undefined ? false : $data.opts.baa;
 
 	$data.selectedBGM = $data.opts.sb === undefined ? "original" : $data.opts.sb;
 	$("#volume-bgm").val($data.volumeBGM);
 	$("#volume-effect").val($data.volumeEff);
 	$("#deny-invite").attr('checked', $data.opts.di);
 	$("#general-badwords").attr('checked', $data.optbag);
-	$("#advanced-badwords").attr('checked', $data.optbaa);
 	$("#deny-whisper").attr('checked', $data.opts.dw);
 	$("#deny-friend").attr('checked', $data.opts.df);
 	$("#auto-ready").attr('checked', $data.opts.ar);
@@ -171,42 +177,6 @@ function connectToRoom(chan, rid){
 		console.warn(L['error'], e);
 	};
 }
-function checkAge(){
-	if(!confirm(L['checkAgeAsk'])) return send('caj', { answer: "no" }, true);
-
-	while(true){
-		var input = [], lv = 1;
-
-		while(lv <= 3){
-			var str = prompt(L['checkAgeInput' + lv]);
-
-			if(!str || isNaN(str = Number(str))){
-				if(--lv < 1) break; else continue;
-			}
-			if(lv == 1 && (str < 1000 || str > 2999)){
-				alert(str + "\n" + L['checkAgeNo']);
-				continue;
-			}
-			if(lv == 2 && (str < 1 || str > 12)){
-				alert(str + "\n" + L['checkAgeNo']);
-				continue;
-			}
-			if(lv == 3 && (str < 1 || str > 31)){
-				alert(str + "\n" + L['checkAgeNo']);
-				continue;
-			}
-			input[lv++ - 1] = str;
-		}
-		if(lv == 4){
-			if(confirm(L['checkAgeSure'] + "\n"
-					+ input[0] + L['YEAR'] + " "
-					+ input[1] + L['MONTH'] + " "
-					+ input[2] + L['DATE'])) return send('caj', { answer: "yes", input: [ input[1], input[2], input[0] ] }, true);
-		}else{
-			if(confirm(L['checkAgeCancel'])) return send('caj', { answer: "no" }, true);
-		}
-	}
-}
 String.prototype.replaceAll = function(search, replace) {
     return this.replace(new RegExp(search,'g'), replace);
 };
@@ -219,32 +189,9 @@ function getAsterisk(s){
    }
    return asterisks;
 }
-function onMessage(data2){
+function onMessage(data){
 	var i;
 	var $target;
-var data;
-if($data.optbaa){
-	//고오급 욕설 필터링 엔진
-	//먼저 쉬운 분석을 위해 json으로 변환
-	var oristring = JSON.stringify(data2);
-	//이 String을 더 쪼갠다(통으로 욕설 제거를 해도 되지만, 그렇게 하면 json 파싱 에러가 생길 수 있음)
-	var jsonstrings = oristring.split('"');
-	//foreach!
-	var newjson=[];
-	jsonstrings.forEach(function(item, index, array){
-
-var fdata=item.replaceAll(advencedBAD, getAsterisk);
-    	newjson.push(fdata);
-	});
-
-	//다시 JSON을 만들자
-var newpJSON=newjson.join('"');
- data = JSON.parse(newpJSON);
-} else {
-	data = data2;
-
-}
-
 
 	switch(data.type){
 		case 'adminResp':
@@ -258,7 +205,6 @@ var newpJSON=newjson.join('"');
 			break;
 		case 'welcome':
 			$data.id = data.id;
-			$data.nick = data.nick;
 			$data.guest = data.guest;
 			$data.admin = data.admin;
 			$data.users = data.users;
@@ -277,42 +223,6 @@ var newpJSON=newjson.join('"');
 			welcome();
 			if(data.caj) checkAge();
 			updateCommunity();
-			if($data.nick=="nonick") {
-				var o = $stage.dialog.newnick;
-				o.parent().append(ov = $('<div />', {id:'newnick-overlay',style:'position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.8;background:black;'}));
-				o.find('#newnick-ok').off('click').click(function(e) {
-					var newnick = $("#newnick-input").val();
-					newnick = newnick !== undefined ? newnick.trim() : "";
-					if (newnick.length<2) {
-						alert("닉네임은 두 글자 이상으로 해 주세요!");
-						$(e.currentTarget).attr('disabled', false);
-						return;
-					} else if (newnick.length>15) {
-						alert("닉네임은 15 글자 이하로 해 주세요!");
-						$(e.currentTarget).attr('disabled', false);
-						return;
-					} else if (newnick.length > 0 && !/^[가-힣a-zA-Z0-9][가-힣a-zA-Z0-9 ]*[가-힣a-zA-Z0-9]$/.exec(newnick)) {
-						alert("닉네임에는 한글/영문/숫자 및 공백만 사용 가능합니다!");
-						$(e.currentTarget).attr('disabled', false);
-						return;
-					}
-					var obj = { nick: newnick };
-					if (!obj.nick || obj.nick.length == 0) delete obj.nick;
-					$.post("/newnick", obj, function(res){
-						if(res.error) return fail(res.error);
-
-						$data.nick = newnick;
-						$("#account-info").text(newnick);
-						$("#users-item-"+$data.id+" .users-name").text(newnick);
-						send('newNick', { id: $data.id, nick: newnick }, true);
-						kkAlert("닉네임 설정이 완료되었습니다!");
-						o.hide();
-						ov.hide();
-					});
-				});
-				showDialog($stage.dialog.newnick, false);
-				ov.show();
-			}
 			break;
 		case 'conn':
 			$data.setUser(data.user.id, data.user);
@@ -343,7 +253,7 @@ var newpJSON=newjson.join('"');
 
 			if($target){
 				delete $data.usersR[data.id];
-				notice($target.nick + L['hasLeft']);
+				notice($target.profile.nick + L['hasLeft']);
 				updateUserListHTML();
 			}
 			break;
@@ -362,7 +272,7 @@ var newpJSON=newjson.join('"');
 			if(data.notice){
 				notice(L['error_' + data.code]);
 			}else{
-				chat(data.profile || {}, data.nick, data.value, data.from, data.timestamp);
+				chat(data.profile || {}, data.value, data.from, data.timestamp);
 			}
 			break;
 		case 'roomStuck':
@@ -404,7 +314,7 @@ var newpJSON=newjson.join('"');
 			updateCommunity();
 			break;
 		case 'friendAdd':
-			$target = $data.users[data.from].nick;
+			$target = $data.users[data.from].profile.nick;
 			i = $target + "(#" + data.from.substr(0, 5) + ")";
 			if ($data.opts.df) send('friendAddRes', {
 					from: data.from,
@@ -418,7 +328,7 @@ var newpJSON=newjson.join('"');
 			});
 			break;
 		case 'friendAddRes':
-			$target = $data.users[data.target].nick;
+			$target = $data.users[data.target].profile.nick;
 			i = $target + "(#" + data.target.substr(0, 5) + ")";
 			notice(i + L['friendAddRes_' + (data.res ? 'ok' : 'no')]);
 			if(data.res){
@@ -431,9 +341,13 @@ var newpJSON=newjson.join('"');
 			$data.friends = data.friends;
 			updateCommunity();
 			break;
+		/*170413_CharXcli_NickChangeFeature(s)*/
 		case 'nickChange':
 			$data.setUser(data.id, data);
-			$data.nick = data.nick;
+			if($data.id == data.id) {
+				global.profile.nick = data.nick;
+				$("#account-info").html(global.profile.nick);
+			}
 			updateUserListHTML();
 			break;
 		case 'starting':
@@ -484,10 +398,10 @@ var newpJSON=newjson.join('"');
 			if($data.id != data.target && $data.id != $data.room.master){
 				kickVoting(data.target);
 			}
-			notice($data._kickTarget.nick + L['kickVoting']);
+			notice($data._kickTarget.profile.nick + L['kickVoting']);
 			break;
 		case 'kickDeny':
-			notice(getKickText($data._kickTarget.nick, data));
+			notice(getKickText($data._kickTarget.profile.nick, data));
 			break;
 		case 'invited':
 			if ($data.opts.di) send('inviteRes', {
@@ -503,7 +417,7 @@ var newpJSON=newjson.join('"');
 			break;
 		case 'inviteNo':
 			$target = $data.users[data.target];
-			notice($target.nick + L['inviteDenied']);
+			notice($target.profile.nick + L['inviteDenied']);
 			break;
 		case 'okg':
 			if($data._playTime > data.time){
@@ -717,7 +631,7 @@ function runCommand(cmd){
 				c = 0;
 				cmd[1] = cmd.slice(1).join(' ');
 				for(i in $data.users){
-					if($data.users[i].nick == cmd[1]){
+					if($data.users[i].profile.nick == cmd[1]){
 						notice("[" + (++c) + "] " + i);
 					}
 				}
@@ -735,7 +649,7 @@ function sendWhisper(target, text){
 	if(text.length){
 		$data._whisper = target;
 		send('talk', { whisper: target, value: text }, true);
-		chat({}, "→" + target, text, true);
+		chat({nick:"→" + target}, text, true);
 	}
 }
 function toggleWhisperBlock(target){
@@ -769,7 +683,7 @@ function processRoom(data){
 	if(data.myRoom){
 		$target = $data.users[data.target];
 		if(data.kickVote){
-			notice(getKickText($target.nick, data.kickVote));
+			notice(getKickText($target.profile.nick, data.kickVote));
 			if($target.id == data.id) alert(L['hasKicked']);
 		}
 		if(data.room.players.indexOf($data.id) == -1){
@@ -894,8 +808,10 @@ function updateUI(myRoom, refresh){
 	$stage.box.me.show();
 	$stage.box.chat.show().width(790).height(190);
 	$stage.chat.height(120);
+	$(".ControlBox").hide();
 
 	if(only == "for-lobby"){
+		$stage.box.chat.show().width(790).height(190);
 		$data._ar_first = true;
 
 		$stage.box.game.hide();
@@ -925,7 +841,7 @@ function updateUI(myRoom, refresh){
 		}
 		updateUserListHTML(refresh || only != $data._only);
 		updateRoomListHTML(refresh || only != $data._only);
-		if($data.nick!="nonick") updateMe();
+		updateMe();
 		if($data._jamsu){
 			clearTimeout($data._jamsu);
 			delete $data._jamsu;
@@ -953,7 +869,7 @@ function updateUI(myRoom, refresh){
 		$stage.box.room.show().height(360);
 		if(only == "for-master") if($stage.dialog.inviteList.is(':visible')) updateUserListHTML();
 		updateRoom(false);
-		if($data.nick!="nonick") updateMe();
+		updateMe();
 	}else if(only == "for-gaming"){
 		$stage.box.game.hide();
 		$stage.box.roomList.hide();
@@ -1020,7 +936,7 @@ function checkRoom(modify){
 	}
 	if($data._master != $data.room.master){
 		u = $data.users[$data.room.master];
-		notice(u.nick + L['hasMaster']);
+		notice(u.profile.nick + L['hasMaster']);
 	}
 	$data._players = $data.room.players.toString();
 	$data._master = $data.room.master;
@@ -1028,6 +944,42 @@ function checkRoom(modify){
 }
 function updateMe(){
 	var my = $data.users[$data.id];
+	if(!my || my.profile.nick=="nonick") {
+		var o = $stage.dialog.newnick;
+		o.parent().append(ov = $('<div />', {id:'newnick-overlay',style:'position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.8;background:black;'}));
+		o.find('#newnick-ok').off('click').click(function(e) {
+			var newnick = $("#newnick-input").val();
+			newnick = newnick !== undefined ? newnick.trim() : "";
+			if (newnick.length<2) {
+				alert("닉네임은 두 글자 이상으로 해 주세요!");
+				$(e.currentTarget).attr('disabled', false);
+				return;
+			} else if (newnick.length>15) {
+				alert("닉네임은 15 글자 이하로 해 주세요!");
+				$(e.currentTarget).attr('disabled', false);
+				return;
+			} else if (newnick.length > 0 && !/^[가-힣a-zA-Z0-9][가-힣a-zA-Z0-9 ]*[가-힣a-zA-Z0-9]$/.exec(newnick)) {
+				alert("닉네임에는 한글/영문/숫자 및 공백만 사용 가능합니다!");
+				$(e.currentTarget).attr('disabled', false);
+				return;
+			}
+			var obj = { nick: newnick };
+			if (!obj.nick || obj.nick.length == 0) delete obj.nick;
+			$.post("/newnick", obj, function(res){
+				if(res.error) return fail(res.error);
+
+				$("#account-info").text(newnick);
+				$("#users-item-"+$data.id+" .users-name").text(newnick);
+				send('newNick', { id: $data.id, nick: newnick }, true);
+				kkAlert("닉네임 설정이 완료되었습니다!");
+				o.hide();
+				ov.hide();
+			});
+		});
+		showDialog($stage.dialog.newnick, false);
+		ov.show();
+		return;
+	}
 	var i, gw = 0;
 	var lv = getLevel(my.data.score);
 	var prev = EXP[lv-2] || 0;
@@ -1037,7 +989,7 @@ function updateMe(){
 	renderMoremi(".my-image", my.equip);
 	// $(".my-image").css('background-image', "url('"+my.profile.image+"')");
 	$(".my-stat-level").replaceWith(getLevelImageHTML(my.data.score, "my-stat-level"));
-	$(".my-stat-name").text(my.nick);
+	$(".my-stat-name").text(my.profile.nick);
 	$(".my-stat-record").html(L['globalWin'] + " " + gw + L['W']);
 	$(".my-stat-ping").html(commify(my.money) + L['ping']);
 	$(".my-okg .graph-bar").width(($data._playTime % 600000) / 6000 + "%");
@@ -1103,7 +1055,7 @@ function userListBarHTML(o, forInvite){
 	return "<div id='"+id+o.id+"' class='"+moreClass+" users-item'>"+
 	"<div class='jt-image users-image'"+(o.profile.image&&o.profile.image.length?(" style='background-image:url("+o.profile.image+")"):"")+"'></div>"+
 	getLevelImageHTML(o, "users-level")+
-	"<div class='users-name ellipse'>"+o.nick+"</div>"+
+	"<div class='users-name ellipse'>"+o.profile.nick+"</div>"+
 	"</div>";
 }
 function addonNicknameHTML(o){
@@ -1118,6 +1070,7 @@ function addonNicknameHTML(o){
 	if(o.equip['BDG'] == "b1_yt") ret.push("x-yt");
 	if(o.equip['BDG'] == "b1_tw") ret.push("x-tw");
 	if(o.equip['BDG'] == "b1_word") ret.push("x-word");
+	if(o.equip['BDG'] == "b1_giftbox") ret.push("x-santa");
 	return ret.join(" ");
 }
 function addonNickname($R, o){
@@ -1131,6 +1084,7 @@ function addonNickname($R, o){
 	if(o.equip['BDG'] == "b1_yt") $R.addClass("x-yt");
 	if(o.equip['BDG'] == "b1_tw") $R.addClass("x-tw");
 	if(o.equip['BDG'] == "b1_word") $R.addClass("x-word");
+	if(o.equip['BDG'] == "b1_giftbox") $R.addClass("x-santa");
 }
 function updateRoomListHTML(refresh){
 	var i;
@@ -1267,7 +1221,7 @@ function normalGameUserBar(o){
 		.append($m = $("<div>").addClass("moremi game-user-image"))
 		.append($("<div>").addClass("game-user-title")
 			.append(getLevelImageHTML(o, "game-user-level"))
-			.append($bar = $("<div>").addClass("game-user-name ellipse").text(o.nick))
+			.append($bar = $("<div>").addClass("game-user-name ellipse").text(o.profile.nick))
 			.append($("<div>").addClass("expl").html(L['LEVEL'] + " " + getLevel(o.data.score)))
 		)
 		.append($n = $("<div>").addClass("game-user-score"));
@@ -1284,7 +1238,7 @@ function miniGameUserBar(o){
 	$R = $("<div>").attr('id', "game-user-"+o.id).addClass("game-user")
 		.append($("<div>").addClass("game-user-title")
 			.append(getLevelImageHTML(o, "game-user-level"))
-			.append($bar = $("<div>").addClass("game-user-name ellipse").text(o.nick))
+			.append($bar = $("<div>").addClass("game-user-name ellipse").text(o.profile.nick))
 		)
 		.append($n = $("<div>").addClass("game-user-score"));
 	if(o.id == $data.id) $bar.addClass("game-user-my-name");
@@ -1295,8 +1249,8 @@ function miniGameUserBar(o){
 }
 function getAIProfile(level){
 	return {
-		title: L['aiLevel' + level] + ' ' + L['robot'],
-		image: "/img/kkutu/robot.png"
+		nick: L['aiLevel' + level] + ' ' + L['robot'],
+		image: DOMAIN+"/img/kkutu/robot.png"
 	};
 }
 function updateRoom(gaming){
@@ -1322,7 +1276,6 @@ function updateRoom(gaming){
 			}
 			if(o.robot && !o.profile){
 				o.profile = getAIProfile(o.level);
-				o.nick = o.profile.title;
 				$data.robots[o.id] = o;
 			}
 			$r.append(renderer(o));
@@ -1345,7 +1298,6 @@ function updateRoom(gaming){
 
 			if(o.robot){
 				o.profile = getAIProfile(o.level);
-				o.nick = o.profile.title;
 				$data.robots[o.id] = o;
 			}
 			$r.append($("<div>").attr('id', "room-user-" + o.id).addClass("room-user")
@@ -1356,7 +1308,7 @@ function updateRoom(gaming){
 				)
 				.append($("<div>").addClass("room-user-title")
 					.append(getLevelImageHTML(o, "room-user-level"))
-					.append($bar = $("<div>").addClass("room-user-name").text(o.nick))
+					.append($bar = $("<div>").addClass("room-user-name").text(o.profile.nick))
 				).on('click', function (e) {
 					requestProfile($(e.currentTarget).attr('id').slice(10));
 				})
@@ -1481,7 +1433,7 @@ function drawMyDress(avGroup){
 	$(".dress-type.selected").removeClass("selected");
 	$("#dress-type-all").addClass("selected");
 	$("#dress-exordial").val(my.exordial);
-	$("#dress-nick").val(my.nick);
+	$("#dress-nick").val(my.profile.nick);
 	drawMyGoods(avGroup || true);
 }
 function renderGoods($target, preId, filter, equip, onClick){
@@ -1699,13 +1651,13 @@ function drawLeaderboard(data){
 	var page = (data.page || Math.floor(fr / 20)) + 1;
 
 	data.data.forEach(function(item, index){
-		var profile = $data.users[item.id];
+		var user = $data.users[item.id];
 
-		if(profile) profile = profile.nick;
+		if(user) nick = user.profile.nick;
 		else if (item.nick)
-			profile = item.nick;
+			nick = item.nick;
 		else
-			profile = L['hidden'];
+			nick = L['hidden'];
 
 		var diff = '-';
 		var diffClass = '';
@@ -1721,7 +1673,6 @@ function drawLeaderboard(data){
 				break;
 		}
 
-
 		item.score = Number(item.score);
 		$board.append($("<tr>").attr('id', "ranking-" + item.id)
 			.addClass("ranking-" + (item.rank + 1))
@@ -1730,7 +1681,11 @@ function drawLeaderboard(data){
 				.append(getLevelImageHTML(item.score, "ranking-image"))
 				.append($("<label>").css('padding-top', 2).html(getLevel(item.score)))
 			)
-			.append($("<td>").html(profile))
+			.append($("<td>")
+				.html(nick)
+				.attr("title",nick)
+				.attr('class', 'leaderBoardNick')
+			)
 			.append($("<td>").html(commify(item.score)))
 			.append($("<td>").html(diff).addClass(diffClass))
 		);
@@ -1751,12 +1706,12 @@ function updateCommunity(){
 		len++;
 		memo = $data.friends[i];
 		o = $data._friends[i] || {};
-		p = ($data.users[i] || {}).nick;
+		p = ($data.users[i] || {}).profile;
 
 		$stage.dialog.commFriends.append($("<div>").addClass("cf-item").attr('id', "cfi-" + i)
 			.append($("<div>").addClass("cfi-status cfi-stat-" + (o.server ? 'on' : 'off')))
 			.append($("<div>").addClass("cfi-server").html(o.server ? L['server_' + o.server] : "-"))
-			.append($("<div>").addClass("cfi-name ellipse").text(p ? p : L['hidden']))
+			.append($("<div>").addClass("cfi-name ellipse").text(p ? p.nick : L['hidden']))
 			.append($("<div>").addClass("cfi-memo ellipse").text(memo))
 			.append($("<div>").addClass("cfi-menu")
 				.append($("<i>").addClass("fa fa-pencil").on('click', requestEditMemo))
@@ -1799,13 +1754,13 @@ function requestRoomInfo(id){
 		p = $data.users[p] || NULL_USER;
 		if(o.players[i].robot){
 			p.profile = { title: L['robot'] };
-			p.nick =  L['robot'];
+			p.profile.nick =  L['robot'];
 			p.equip = { robot: true };
 		}else rd.t = rd.t || 0;
 
 		$pls.append($("<div>").addClass("ri-player")
 			.append($moremi = $("<div>").addClass("moremi rip-moremi"))
-			.append($p = $("<div>").addClass("ellipse rip-title").html(p.nick))
+			.append($p = $("<div>").addClass("ellipse rip-title").html(p.profile.nick))
 			.append($("<div>").addClass("rip-team team-" + rd.t).html($("#team-" + rd.t).html()))
 			.append($("<div>").addClass("rip-form").html(L['pform_' + rd.f]))
 		);
@@ -1827,11 +1782,11 @@ function requestProfile(id){
 		notice(L['error_405']);
 		return;
 	}
-	$("#ProfileDiag .dialog-title").html((o.nick) + L['sProfile']);
+	$("#ProfileDiag .dialog-title").html((o.profile.nick) + L['sProfile']);
 	$(".profile-head").empty().append($pi = $("<div>").addClass("moremi profile-moremi"))
 		.append($("<div>").addClass("profile-head-item")
 			.append(getImage(o.profile.image).addClass("profile-image"))
-			.append($("<div>").addClass("profile-title ellipse").text(o.nick)
+			.append($("<div>").addClass("profile-title ellipse").text(o.profile.nick)
 				.append($("<label>").addClass("profile-tag").html(" #" + o.id.toString().substr(0, 5)))
 			)
 		)
@@ -1889,7 +1844,7 @@ function requestInvite(id){
 	var nick;
 
 	if(id != "AI"){
-		nick = $data.users[id].nick;
+		nick = $data.users[id].profile.nick;
 		if(!confirm(nick + L['sureInvite'])) return;
 	}
 	send('invite', { target: id });
@@ -2141,13 +2096,11 @@ function startRecord(title){
 			o.robot = true;
 			o.data = { score: 0 };
 			u = { profile: getAIProfile(u.level) };
-			u.nick = u.profile.title;
-			o.nick = u.profile.title;
 		}else{
 			o.data = u.data;
 			o.equip = u.equip;
 		}
-		o.title = "#" + u.id; // u.profile.title;
+		o.nick = "#" + u.id; // u.profile.title;
 		// o.image = u.profile.image;
 		$rec.players.push(o);
 	}
@@ -2268,7 +2221,7 @@ function roundEnd(result, data){
 		$b.append($o = $("<div>").addClass("result-board-item")
 			.append($p = $("<div>").addClass("result-board-rank").html(r.rank + 1))
 			.append(getLevelImageHTML(sc, "result-board-level"))
-			.append($("<div>").addClass("result-board-name").text(o.nick))
+			.append($("<div>").addClass("result-board-name").text(o.profile.nick))
 			.append($("<div>").addClass("result-board-score")
 				.html(data.scores ? (L['avg'] + " " + commify(data.scores[r.id]) + L['kpm']) : (commify(r.score || 0) + L['PTS']))
 			)
@@ -2406,7 +2359,7 @@ function drawRanking(ranks){
 		$b.append($o = $("<div>").addClass("result-board-item")
 			.append($("<div>").addClass("result-board-rank").html(r.rank + 1))
 			.append(getLevelImageHTML(r.score, "result-board-level"))
-			.append($("<div>").addClass("result-board-name").text(o.nick))
+			.append($("<div>").addClass("result-board-name").text(o.profile.nick))
 			.append($("<div>").addClass("result-board-score").html(commify(r.score) + L['PTS']))
 			.append($("<div>").addClass("result-board-reward").html(""))
 			.append($v = $("<div>").addClass("result-board-lvup").css('display', me ? "block" : "none")
@@ -2422,7 +2375,7 @@ function drawRanking(ranks){
 	}
 }
 function kickVoting(target){
-	var op = $data.users[target].nick;
+	var op = $data.users[target].profile.nick;
 
 	$("#kick-vote-text").text(op + L['kickVoteText']);
 	$data.kickTime = 10;
@@ -2435,7 +2388,7 @@ function kickVoteTick(){
 	if(--$data.kickTime > 0) $data._kickTimer = addTimeout(kickVoteTick, 1000);
 	else $stage.dialog.kickVoteY.trigger('click');
 }
-function loadShop(){
+function loadShop(sorttype){
 	var $body = $("#shop-shelf");
 
 	$body.html(L['LOADING']);
@@ -2446,7 +2399,20 @@ function loadShop(){
 			$stage.menu.shop.trigger('click');
 			return fail(res.error);
 		}
-		res.goods.sort(function(a, b){ return b.updatedAt - a.updatedAt; }).forEach(function(item, index, my){
+		$body.append($("<div>").attr('id', "no_result").css({'width':'100%','display': 'None'})
+			.append($("<div>").addClass("goods-title")
+				.css({'width':'auto','position':'absolute','left':'50%','margin-top':'6.5em','font-size':'18px'})
+				.html("<p>아이템 검색 결과가 없습니다.<br><i style=\"font-size:13px\">검색어나 카테고리를 바꿔보세요!</i></p>")));
+		if(sorttype=="name"){
+			res.goods.sort(function(a, b){ return iName(b._id) < iName(a._id) });
+		} else if(sorttype=="popular"){
+			res.goods.sort(function(a, b){ return b.hit - a.hit });
+		} else if(sorttype=="time"){
+			res.goods.sort(function(a, b){ return b.updatedAt - a.updatedAt });
+		} else if(sorttype=="price"){
+			res.goods.sort(function(a, b){ return b.cost - a.cost });
+		}
+		res.goods.forEach(function(item, index, my){
 			if(item.cost < 0) return;
 			var url = iImage(false, item);
 
@@ -2459,21 +2425,36 @@ function loadShop(){
 		});
 		global.expl($body);
 	});
+	$("#shop-searchbox").val("");
 	$(".shop-type.selected").removeClass("selected");
 	$("#shop-type-all").addClass("selected");
 }
-function filterShop(by){
+function filterShop(by, searchVal){
 	var isAll = by === true;
 	var $o, obj;
 	var i;
+	var item_count = 0;
 
 	if(!isAll) by = by.split(',');
 	for(i in $data.shop){
 		obj = $data.shop[i];
 		if(obj.cost < 0) continue;
 		$o = $("#goods_" + i).show();
-		if(isAll) continue;
-		if(by.indexOf(obj.group) == -1) $o.hide();
+		if(!iName(i).includes(searchVal)){$o.hide(); continue;}
+		if(isAll){
+			item_count++;
+		} else {
+			if(by.indexOf(obj.group) == -1){
+				$o.hide();
+			} else {
+				item_count++;
+			}
+		}
+	}
+	if(item_count){
+		$("#no_result").css("display", "none");
+	} else {
+		$("#no_result").css("display", "");
 	}
 }
 var questScope = {
@@ -2567,7 +2548,8 @@ function onGoods(e){
 	$oj = $("#purchase-ping-after").html(commify(after) + L['ping']);
 	$("#purchase-item-desc").html((after < 0) ? L['notEnoughMoney'] : spt);
 	for(i in my.equip) ceq[i] = my.equip[i];
-	ceq[($obj.group == "Mhand") ? [ "Mlhand", "Mrhand" ][Math.floor(Math.random() * 2)] : $obj.group] = id;
+	//ceq[($obj.group == "Mhand") ? [ "Mlhand", "Mrhand" ][Math.floor(Math.random() * 2)] : $obj.group] = id;
+	ceq[(String($obj.group).substr(0, 3) == "BDG") ? "BDG" : ($obj.group == "Mhand") ? [ "Mlhand", "Mrhand" ][Math.floor(Math.random() * 2)] : $obj.group] = id;
 
 	renderMoremi("#moremi-after", ceq);
 
@@ -2811,7 +2793,7 @@ function getLevelImageHTML(score, cls){
 	var lX = (lv % 25) * -100;
 	var lY = Math.floor(lv * 0.04) * -100;
 
-	return "<div style='float:left;background-image:url(/img/kkutu/lv/newlv.png);background-position:"+ lX + "% " + lY + "%;background-size:2560%;' class='"+cls+"'></div>";
+	return "<div style='float:left;background-image:url("+DOMAIN+"/img/kkutu/lv/newlv.png);background-position:"+ lX + "% " + lY + "%;background-size:2560%;' class='"+cls+"'></div>";
 }
 function getImage(url){
 	return $("<div>").addClass("jt-image").css('background-image', "url('"+url+"')");
@@ -2832,7 +2814,7 @@ function getOptions(mode, opts, pq, hash){
 	if(MODE[mode]=="KPQ"){
 		switch(pq.order){
 			case "correct":
-				R.push("맞춘사람");
+				R.push("맞힌사람");
 				break;
 			case "order":
 				R.push("순서대로");
@@ -2867,6 +2849,7 @@ function setRoomHead($obj, room){
 	var $rm;
 
 	$obj.empty()
+		.append(mobile?'':'<h5 style="position: absolute;left: 50%;transform: translateX(-50%);font-weight: bold;">끄투코리아 - kkutu.co.kr</h5>')
 		.append($("<h5>").addClass("room-head-number").html("["+(room.practice ? L['practice'] : room.id)+"]"))
 		.append($("<h5>").addClass("room-head-title").text(badWords(room.title)))
 		.append($rm = $("<h5>").addClass("room-head-mode").html(opts.join(" / ")))
@@ -2890,7 +2873,7 @@ function loadSounds(list, callback){
 }
 function getAudio(k, url, cb){
 	var req = new XMLHttpRequest();
-
+	url = DOMAIN+url;
 	req.open("GET", url);
 	req.responseType = "arraybuffer";
 	req.onload = function(e){
@@ -3000,7 +2983,7 @@ function forkChat(){
 }
 function badWords(text){
 	if($data.optbag){
-	return text.replace(BAD, "♥♥");
+		return text.replace(BAD, "♥♥");
 	} else {
 		return text;
 	}
@@ -3027,13 +3010,13 @@ function chatBalloon(text, id, flag){
 		$obj.animate({ 'opacity': 0 }, 500, function(){ $obj.remove(); });
 	}, 2500);
 }
-function chat(profile, nick, msg, from, timestamp){
+function chat(profile, msg, from, timestamp){
 	var time = timestamp ? new Date(timestamp) : new Date();
 	var equip = $data.users[profile.id] ? $data.users[profile.id].equip : {};
 	var $bar, $msg, $item;
 	var link;
 
-	if($data._shut[nick]) return;
+	if($data._shut[profile.nick]) return;
 	if(from){
 		if($data.opts.dw) return;
 		if($data._wblock[from]) return;
@@ -3055,7 +3038,7 @@ function chat(profile, nick, msg, from, timestamp){
 	var class_observer_head = is_spectate ? " chat-head-spectate" : (is_observer ? " chat-head-observer" : "");
 	var class_observer_body = is_observer ? " chat-body-observer" : "";
 	$stage.chat.append($item = $("<div>").addClass("chat-item")
-		.append($bar = $("<div>").addClass("chat-head ellipse"+class_observer_head).text(nick))
+		.append($bar = $("<div>").addClass("chat-head ellipse"+class_observer_head).text(profile.nick))
 		.append($msg = $data.users[profile.id]?
 			$data.users[profile.id].equip["BDG"]=="b1_gm"?$("<div>").addClass("chat-body").html(msg) :
 				$("<div>").addClass("chat-body"+class_observer_body).text(msg):$("<div>").addClass("chat-body"+class_observer_body).text(msg))
@@ -3149,10 +3132,10 @@ function iImage(key, sObj){
 	}else if(typeof sObj == "string") sObj = { _id: "def", group: sObj, options: {} };
 	obj = $data.shop[key] || sObj;
 	gif = obj.options.hasOwnProperty('gif') ? ".gif" : ".png";
-	if(obj.group.slice(0, 3) == "BDG") return "/img/kkutu/moremi/badge/" + obj._id + gif;
+	if(obj.group.slice(0, 3) == "BDG") return DOMAIN+"/img/kkutu/moremi/badge/" + obj._id + gif;
 	return (obj.group.charAt(0) == 'M')
-		? "/img/kkutu/moremi/" + obj.group.slice(1) + "/" + obj._id + gif
-		: "/img/kkutu/shop/" + obj._id + gif;
+		? DOMAIN+"/img/kkutu/moremi/" + obj.group.slice(1) + "/" + obj._id + gif
+		: DOMAIN+"/img/kkutu/shop/" + obj._id + gif;
 }
 function iDynImage(group, data){
 	var canvas = document.createElement("canvas");
@@ -3213,17 +3196,26 @@ function renderMoremi(target, equip){
 			.css(csss)
 		);
 	}
-	if(key = equip['BDG']){
+	/*if(key = equip['BDG']){
 		$obj.append($("<img>")
 			.addClass("moremies moremi-badge")
 			.attr('src', iImage(key))
 			.css({ 'width': "100%", 'height': "100%" })
 		);
+	}*/
+	if(equip['BDG']){
+		$obj.append($("<img>")
+			.addClass("moremies moremi-badge")
+			.attr('src', iImage(equip['BDG']))
+			.css({ 'width': "100%", 'height': "100%" })
+		);
 	}
-	$obj.children(".moremi-back").after($("<img>").addClass("moremies moremi-body")
-		.attr('src', equip.robot ? "/img/kkutu/moremi/robot.png" : "/img/kkutu/moremi/body.png")
-		.css({ 'width': "100%", 'height': "100%" })
-	);
+	if(equip.robot){
+		$obj.children(".moremi-back").after($("<img>").addClass("moremies moremi-body")
+			.attr('src', equip.robot ? DOMAIN+"/img/kkutu/moremi/robot.png" : DOMAIN+"/img/kkutu/moremi/body.png")
+			.css({ 'width': "100%", 'height': "100%" })
+		);
+	}
 	$obj.children(".moremi-rhand").css('transform', "scaleX(-1)");
 }
 function commify(val){

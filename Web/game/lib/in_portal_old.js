@@ -1,7 +1,7 @@
 /**
 Rule the words! KKuTu Online
 Copyright (C) 2017 JJoriping(op@jjo.kr)
-Copyright (C) 2017 KKuTu Korea(op@kkutu.co.kr)
+Copyright (C) 2017-2018 KKuTu Korea(admin@kkutu.co.kr)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 	var $stage;
 	var LIMIT = 400;
 	var LIST;
-	
+
 	$(document).ready(function(){
 		$stage = {
 			list: $("#server-list"),
@@ -30,7 +30,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 			ref: $("#server-refresh"),
 			refi: $("#server-refresh>i")
 		};
-		
+
 		var hour = new Date().getHours();
 		var NIGHT = (hour<5 || hour>19)?true:false;
 		var GAMEBG = "/img/kkutu/gamebg_korea.png";
@@ -40,7 +40,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 		});
 		$stage.start.prop('disabled', true).on('click', function(e){
 			var i, j;
-			
+
 			for(i=0.9; i<1; i+=0.01){
 				for(var j=0;j<LIST.length;j++){
 					if(LIST[j] < i * LIMIT){
@@ -66,7 +66,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 	function seekServers(){
 		$.get("/servers", function(data){
 			var sum = 0;
-			
+
 			$stage.list.empty();
 			LIST = data.list;
 			LIMIT = data.max;
@@ -75,7 +75,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 				var people = (status == "x") ? "-" : (v + " / " + LIMIT);
 				var limp = v / LIMIT * 100;
 				var $e;
-				
+
 				sum += v || 0;
 				if(status == "o"){
 					if(limp >= 99) status = "q";
