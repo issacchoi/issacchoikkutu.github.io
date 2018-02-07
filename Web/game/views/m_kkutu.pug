@@ -1,7 +1,7 @@
 //
 	Rule the words! KKuTu Online
 	Copyright (C) 2017 JJoriping(op@jjo.kr)
-	Copyright (C) 2017 KKuTu Korea(op@kkutu.co.kr)
+	Copyright (C) 2017-2018 KKuTu Korea(admin@kkutu.co.kr)
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 	
 	You should have received a copy of the GNU General Public License
 	along with this program. If not, see <http://www.gnu.org/licenses/>.
-
+	
 extends m_layout
 
 mixin Dialog(id, w, h, t, nocls)
@@ -24,7 +24,7 @@ mixin Dialog(id, w, h, t, nocls)
 			div.dialog-title(style=`width: ${w - 20}px;`)!= t || ''
 		div.dialog-body(style='font-size: 13px;')
 			block
-	
+
 mixin GameOption(key, prefix)
 	- var name = locals.OPTIONS[key].name;
 	- var sid = name.toLowerCase();
@@ -41,16 +41,16 @@ mixin SettingOption(id, text, st)
 
 block Subject
 	title= L('title')
-	
+
 block JS
-	script(type='text/javascript', src='/js/in_game_kkutu.min.js')
-	
+	script(type='text/javascript', src=DOMAIN+'/js/in_game_kkutu.min.js')
+
 block CSS
-	link(rel='stylesheet', href='/css/in_game_kkutu_shop.css')
-	
+	link(rel='stylesheet', href=DOMAIN+'/css/in_game_kkutu_shop.css')
+
 block Jungle
 	span#PUBLIC= PUBLIC ? "true" : undefined
-	span#URL= `ws://kkutu.co.kr:${locals.PORT}/${locals._idconn}`
+	span#URL= `${locals.PROTOCOL}://${locals.WSURL}:${locals.PORT}/${locals._idconn}`
 	span#MOREMI_PART= locals.MOREMI_PART.join(',')
 	span#AVAIL_EQUIP= locals.AVAIL_EQUIP.join(',')
 	span#RULE= JSON.stringify(locals.RULE)
@@ -64,13 +64,13 @@ block Jungle
 			<h5>${locals.KO_INJEONG.map(function(item){ return L('theme_' + item); })}</h5>\
 			<h5 style='margin-top: 2px; border-top: 1px dashed #444444; padding-top: 2px; color: #BBBBBB;'>${L('explInjeongListTitle')} (${L('modeEKT')}, ${L('modeESH')})</h5>\
 			<h5>${locals.EN_INJEONG.map(function(item){ return L('theme_' + item); })}</h5>`;
-	
+
 block Middle
 	- var VERSION = L('version') + " (모바일)";
 	- var nick = SESSION.profile ? (SESSION.profile.title || SESSION.profile.name) : null;
 	div#Intro
-		img#intro(src='/img/kkutu/m_intro.png')
-		//- img#intro-start(src='/img/kkutu/intro_start.gif')
+		img#intro(src=DOMAIN+'/img/kkutu/intro/m_intro180130.png')
+		//- img#intro-start(src=DOMAIN+'/img/kkutu/intro_start.gif')
 		div#version= VERSION
 		div#intro-text= L('LOADING')
 	div.kkutu-menu
@@ -122,6 +122,7 @@ block Middle
 		div.dialog-bar.tail-button
 			button#setting-ok= L('save')
 			button#setting-server= L('changeServer')
+			button#setting-theme 테마 선택
 	+Dialog('CommunityDiag', 300, 300)
 		div.dialog-bar(style='height: 225px; overflow-y: scroll;')
 			div#comm-friends
@@ -356,6 +357,13 @@ block Middle
 			button#obtain-ok= L('OK')
 	+Dialog('HelpDiag', 300, 400, L('helpText'))
 		iframe#help-board(width=300, height=375)
+	+Dialog('ReportDialog', 350, 350, "신고하기")
+		.report-reasonlist
+			- for(i in REPORT_CODE)
+				+CheckBox('r-'+i,REPORT_CODE[i])
+		textarea#report-reasonarea(style="width:calc(100% - 12px);height:100px;margin-top:5px;",placeholder="있었던 일들을 최대한 자세히 입력해주세요.",maxlength=100)
+		div.dialog-bar.tail-button
+			button#report-ok 신고하기
 	+Dialog('NewNickDialog', 300, 140, "닉네임 설정하기")
 		div.dialog-bar
 			h3 2~15글자, 영문/한글/숫자/공백 사용 가능
@@ -364,6 +372,12 @@ block Middle
 			input(type='text', placeholder="닉네임 입력", style='width: 288px;', maxlength=15, id="newnick-input")
 		div.dialog-bar.tail-button
 			button#newnick-ok= L('OK')
+	+Dialog('ThemeSelectDialog', 300, 200, "테마 선택", true)
+		div.dialog-bar
+			h3(style="text-align:center;") 사용하실 테마를 선택해주세요.
+		div(style="width:240px;height:120px;margin:0 auto;")
+			button#theme-classic.selectTheme 클래식
+			button#theme-kkuko.selectTheme 끄투코리아
 	+Product('UserList')
 		div 불러오는 중
 	+Product('RoomList')
@@ -386,9 +400,9 @@ block Middle
 				input#cw-q-input(placeholder=L('inputHere'), style='width: 313px; height: 20px; font-size: 15px;', autocomplete='off', autocorrect='off', autocapitalize='off', spellcheck='false')
 				div.cw-q-body
 			div.jjoriping
-				img.jjoObj.jjoEyeL(src='/img/jjoeyeL.png')
-				img.jjoObj.jjoNose(src='/img/jjonose.png')
-				img.jjoObj.jjoEyeR(src='/img/jjoeyeR.png')
+				img.jjoObj.jjoEyeL(src=DOMAIN+'/img/jjoeyeL.png')
+				img.jjoObj.jjoNose(src=DOMAIN+'/img/jjonose.png')
+				img.jjoObj.jjoEyeR(src=DOMAIN+'/img/jjoeyeR.png')
 				div.jjoDisplayBar
 					div.jjo-display
 					+GraphBar('jjo-turn-time')
@@ -406,9 +420,8 @@ block Middle
 		div#Chat
 		input#TalkX(maxlength=200)
 		button#ChatBtn= L('send')
-	//+Product('AD')
-		//div.AD_1
-		//	div#realssp_kkutu00001_7261.realssp_dv(data-mcode="a2t1dHUwMDAwMV83MjYx")
-		//	script(async, src="http://nw.realssp.co.kr/realclickssp.js?v=1.0&m=kkutu00001_7261&t=j")
-		//div.AD_2
-		//	script(src="//ad.ilikesponsorad.com/ad/ad.js?adImpMgrCode=46673&width=468&height=60")
+	+Product('AD')
+		script(type='text/javascript').
+			(function(cl,i,c,k,m,o,n){m=cl.location.protocol+c;o=cl.referrer;m+='&mon_rf='+encodeURIComponent(o);
+			n='<'+i+' type="text/javascript" src="'+m+'"></'+i+'>';cl.writeln(n);
+			})(document,'script','//mtab.clickmon.co.kr/pop/wp_m_320_js.php?PopAd=CM_M_1003067%7C%5E%7CCM_A_1036684%7C%5E%7CAdver_M_1003115');

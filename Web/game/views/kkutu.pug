@@ -1,7 +1,7 @@
 //
 	Rule the words! KKuTu Online
 	Copyright (C) 2017 JJoriping(op@jjo.kr)
-	Copyright (C) 2017 KKuTu Korea(op@kkutu.co.kr)
+	Copyright (C) 2017-2018 KKuTu Korea(admin@kkutu.co.kr)
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -23,14 +23,14 @@ mixin Dialog(id, w, h, t, nocls)
 			div.dialog-title(style=`width: ${w - 20}px;`)!= t || ''
 		div.dialog-body(style='font-size: 13px;')
 			block
-				
+
 mixin Dialog_(id, w, t, nocls)
 	div.dialog(id=id, style=`width: ${w}px;`)
 		div(class=nocls ? 'no-close dialog-head' : 'dialog-head')
 			div.dialog-title(style=`width: ${w - 20}px;`)!= t || ''
 		div.dialog-body(style='font-size: 13px;')
 			block
-	
+
 mixin GameOption(key, prefix)
 	- var name = locals.OPTIONS[key].name;
 	- var sid = name.toLowerCase();
@@ -50,16 +50,16 @@ block Subject
 	title= L('title')
 
 block JS
-	script(type='text/javascript', src='/js/c.min.js?v=' + VERSION)
-	script(type='text/javascript', src='/js/in_game_kkutu.min.js?v=' + VERSION)
+	script(type='text/javascript', src=DOMAIN+'/js/c.min.js?v=' + VERSION)
+	script(type='text/javascript', src=DOMAIN+'/js/in_game_kkutu.min.js?v=' + VERSION)
 
 block CSS
-	link(rel='stylesheet', href='/css/in_game_kkutu_shop.css?v=' + VERSION)
-	
+	link(rel='stylesheet', href=DOMAIN+'/css/in_game_kkutu_shop.css?v=' + VERSION)
+
 block Jungle
 	span#PUBLIC= PUBLIC ? "true" : undefined
 	// span#PORT= locals.PORT
-	span#URL= `ws://kkutu.co.kr:${locals.PORT}/${locals._idconn}`
+	span#URL= `${locals.PROTOCOL}:${locals.WSURL}:${locals.PORT}/${locals._idconn}`
 	span#MOREMI_PART= locals.MOREMI_PART.join(',')
 	span#AVAIL_EQUIP= locals.AVAIL_EQUIP.join(',')
 	span#RULE= JSON.stringify(locals.RULE)
@@ -79,7 +79,7 @@ block Middle
 	- var nick = SESSION.profile ? (SESSION.profile.title || SESSION.profile.name) : null;
 	div#Intro
 		img#intro(src=INTROIMG)
-		// img#intro-start(src='/img/kkutu/intro_start.gif')
+		// img#intro-start(src=DOMAIN+'/img/kkutu/intro_start.gif')
 		div#version= VERSION
 		div#intro-text= L('LOADING')
 	div.kkutu-menu
@@ -106,7 +106,6 @@ block Middle
 		div.dialog-bar
 			h4= L('badwords-filter')
 			+SettingOption('general-badwords', L('generalBadwordsFilter'))
-			+SettingOption('advanced-badwords', L('advancedBadwordsFilter'))
 		div.dialog-bar
 			h4= L('volume-bgm')
 			input#volume-bgm(type='range' min='0' max='1' value='1' step='0.1' style='width:50%;')
@@ -136,6 +135,7 @@ block Middle
 		div.dialog-bar.tail-button
 			button#setting-ok= L('save')
 			button#setting-server= L('changeServer')
+			button#setting-theme 테마 선택
 	+Dialog('CommunityDiag', 300, 300)
 		div.dialog-bar(style='height: 225px; overflow-y: scroll;')
 			div#comm-friends
@@ -226,7 +226,7 @@ block Middle
 		div.dialog-bar.pqoption(style='display:none;')
 			h4 술래 순서
 			select#room-pq-order
-				option(value="correct", selected) 맞춘사람
+				option(value="correct", selected) 맞힌사람
 				option(value="order") 순서대로
 				option(value="random") 무작위로
 		div.dialog-bar(style='height: 100px;')
@@ -436,6 +436,13 @@ block Middle
 			button#obtain-ok= L('OK')
 	+Dialog('HelpDiag', 550, 400, L('helpText'))
 		iframe#help-board(width=550, height=375)
+	+Dialog('ReportDialog', 350, 350, "신고하기")
+		.report-reasonlist
+			- for(i in REPORT_CODE)
+				+CheckBox('r-'+i,REPORT_CODE[i])
+		textarea#report-reasonarea(style="width:calc(100% - 12px);height:100px;margin-top:5px;",placeholder="있었던 일들을 최대한 자세히 입력해주세요.",maxlength=100)
+		div.dialog-bar.tail-button
+			button#report-ok 신고하기
 	+Dialog('NewNickDialog', 300, 140, "닉네임 설정하기")
 		div.dialog-bar
 			h3 2~15글자, 영문/한글/숫자/공백 사용 가능
@@ -444,6 +451,66 @@ block Middle
 			input(type='text', placeholder="닉네임 입력", style='width: 288px;', maxlength=15, id="newnick-input")
 		div.dialog-bar.tail-button
 			button#newnick-ok= L('OK')
+	+Dialog('NoticeDialog', 700, 400, "공지사항")
+		div(style="float: left;margin: 3px 0px;width: 100%;")
+			div(style="width:300px;height:340px;float:left;")
+				div(style="width:296px;height:236px;float:left;padding:2px")
+					p.notice-title 환영합니다!
+					p.notice-content 기상천외한 끝말잇기를 웹게임으로!
+					p.notice-content 끄투코리아에서 한글 또는 영어 단어를 활용하여 다양한 글자 게임들을 접할 수 있습니다. 끝말잇기, 쿵쿵따, 자음퀴즈 등 총 열다섯 가지의 게임 유형이 있습니다. 게임 유형에 따라 자신의 턴에 적절한 단어를 입력하면 점수를 획득할 수 있습니다. 게임 내에서 가장 높은 점수를 획득한 유저가 승리합니다.
+					p
+					p.notice-content
+						b 기타 자세한 내용은 좌측 상단 물음표 버튼을 눌러 도움말을 확인해주세요
+				div(style="width:300px;height:90px;float:left;")
+					script(async='', src='//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js')
+					ins.adsbygoogle(style='display:inline-block;width:300px;height:90px', data-ad-client='ca-pub-8383440458165932', data-ad-slot='8840565289')
+					script.
+						(adsbygoogle = window.adsbygoogle || []).push({});
+					//
+						script(async='', src='//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js')
+						ins.adsbygoogle(style='display:block', data-ad-format='fluid', data-ad-layout-key='-h6-17+w-1+5l', data-ad-client='ca-pub-8383440458165932', data-ad-slot='5468172772')
+						script.
+							(adsbygoogle = window.adsbygoogle || []).push({});
+			div(style="width:400px;height:340px;float:left;")
+				div(style="width:400px;height:100px;float:left;")
+					a(href="//cafe.naver.com/kkutukorea", target="_blank")
+						img(src=DOMAIN+"/img/banner/noticebanner.png")
+				div(style="width:400px;height:240px;float:left;")
+					div(style="width:196px;height:236px;float:left;padding:2px")
+						p.notice-title 서버 이전 완료!
+						p.notice-content 12월 5일, 서버 이전이 완료되었습니다! 5일에 있었던 서버 공격으로 인해 끄투코리아팀은 방안을 모색했으며, 새로운 보금자리를 찾게 되었습니다.
+						p
+						p.notice-content
+							b 빠른 로딩속도, 사이버 공격으로부터 안전한 끄투코리아를 만나보세요!
+					div(style="width:196px;height:236px;float:left;padding:2px")
+						p.notice-title 테마 선택 기능 추가
+						p.notice-content 테마 선택 기능을 통하여 여러분들은 이제 취향에 맞는 디자인을 고르실 수 있습니다. 기존의 끄투 디자인을 원하신다고요? 테마 선택을 통해 바꿔보세요! 테마 변경 기능은 여러분들이 가지고 있던 옛 끄투 서버에 대한 그리움을 그나마 달래줄 것입니다.
+						p
+						p.notice-content
+							b 좌측 상단 스패너 버튼을 누르시면 설정이 가능합니다!
+		button#notice-ok(style="margin: 0 auto;float:initial;height:15px;width:60px;") 확인
+		div(style="margin-top: -23px;float: right;margin-right: 8px;")
+			input#notice-nolook(type="checkbox",style="float: left;")
+			label(style="float:left;") 하루동안 보지않기
+	style.
+		.notice-title{
+			font-size: 20px;
+			margin: 2px;
+			font-weight: bold;
+			margin-bottom: 5px;
+		}
+		.notice-content{
+			font-size: 15px;
+			margin: 0px;
+			font-weight: normal;
+			word-break: keep-all;
+		}
+	+Dialog('ThemeSelectDialog', 300, 200, "테마 선택", true)
+		div.dialog-bar
+			h3(style="text-align:center;") 사용하실 테마를 선택해주세요.
+		div(style="width:240px;height:120px;margin:0 auto;")
+			button#theme-classic.selectTheme 클래식
+			button#theme-kkuko.selectTheme 끄투코리아
 	+Product('UserList')
 		div 불러오는 중
 	+Product('RoomList')
@@ -453,6 +520,19 @@ block Middle
 			- for(var i in locals.CATEGORIES)
 				- var v = locals.GROUPS[locals.CATEGORIES[i]] || [];
 				div.category-filter.shop-type(id="shop-type-" + locals.CATEGORIES[i], value=v.join(','))= L('category_' + locals.CATEGORIES[i])
+		div.shop-sorter
+			div.category-filter.shop-sort(id="item_asc", style="width:22px")!= L('shopsort')
+			div.sortTooltip
+				div.radio-toolbar
+					label #[input.radioTooltip(type="radio", name="shopSortType", value="name")] 이름순 정렬
+						br
+					label #[input.radioTooltip(type="radio", name="shopSortType", value="price")] 가격순 정렬
+						br
+					label #[input.radioTooltip(type="radio", name="shopSortType", value="popular")] 인기순 정렬
+						br
+					label #[input.radioTooltip(type="radio", name="shopSortType", value="time" checked="checked")] 추가순 정렬
+		div.shop-search
+			input#shop-searchbox(type="text",placeholder="검색어를 입력해 주십시오.")
 		div#shop-shelf(style='width: 100%; height: 305px; overflow-y: scroll;')
 	+Product('Room')
 		div.team-selector
@@ -508,9 +588,9 @@ block Middle
 					button#pq_clear 모두 지우기
 			div.b-left.bb(style='display: none;')
 			div.jjoriping
-				img.jjoObj.jjoEyeL(src='/img/jjoeyeL.png')
-				img.jjoObj.jjoNose(src='/img/jjonose.png')
-				img.jjoObj.jjoEyeR(src='/img/jjoeyeR.png')
+				img.jjoObj.jjoEyeL(src=DOMAIN+'/img/jjoeyeL.png')
+				img.jjoObj.jjoNose(src=DOMAIN+'/img/jjonose.png')
+				img.jjoObj.jjoEyeR(src=DOMAIN+'/img/jjoeyeR.png')
 				div.jjoDisplayBar
 					div.jjo-display.ellipse
 						div.pqdisplay.ellipse(style='display: none;')
@@ -544,7 +624,7 @@ block Middle
 		input#TalkX(maxlength=200)
 		button#ChatBtn= L('send')
 	+Product('AD')
-		script(async,src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js")
-		ins.adsbygoogle(style="display:inline-block;width:728px;height:90px",data-ad-client="ca-pub-8383440458165932",data-ad-slot="1656395603")
-		script.
-			(adsbygoogle = window.adsbygoogle || []).push({});
+		script(type='text/javascript').
+			(function(cl,i,c,k,m,o,n){m=cl.location.protocol+c;o=cl.referrer;m+='&mon_rf='+encodeURIComponent(o);
+			n='<'+i+' type="text/javascript" src="'+m+'"></'+i+'>';cl.writeln(n);
+			})(document,'script','//tab2.clickmon.co.kr/pop/wp_ad_728_js.php?PopAd=CM_M_1003067%7C%5E%7CCM_A_1036684%7C%5E%7CAdver_M_1003115&rt_ad_id_code=RTA_105177');

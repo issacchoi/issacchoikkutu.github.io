@@ -1,7 +1,7 @@
 //
 	Rule the words! KKuTu Online
 	Copyright (C) 2017 JJoriping(op@jjo.kr)
-	Copyright (C) 2017 KKuTu Korea(op@kkutu.co.kr)
+	Copyright (C) 2017-2018 KKuTu Korea(admin@kkutu.co.kr)
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -24,36 +24,35 @@ html
 		title= L('title')
 		meta(charset='utf-8')
 		meta(name='viewport', content='width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no')
-		script(src="https://apis.google.com/js/api:client.js")
-		script(src="https://developers.kakao.com/sdk/js/kakao.min.js")
 		+PageHead()
 	body
 		span#locale= JSON.stringify(LANG)
-		span#stateKey= locals._id
 		span#before= locals.before
 		button.back(onclick="location.href='"+locals.before+"';") X
 		div.login-title KKUTU KOREA 로그인
-		button.with-naver
-			div.icon
-				img(src="/img/social/naver.png")
-			div.login-text= L('withNaver')
-		button.with-facebook
-			div.icon
-				img(src="/img/social/facebook.png")
-			div.login-text= L('withFacebook')
-		button.with-kakao
-			div.icon
-				img(src="/img/social/kakao.png")
-			div.login-text= L('withKakao')
-		button.with-twitter
-			div.icon
-				img(src="/img/social/twitter.png")
-			div.login-text= L('withTwitter')
-		button.with-google
-			div.icon
-				img(src="/img/social/google.png")
-			div.login-text= L('withGoogle')
-		//div#with-google(style='border-radius: 5px; margin: 8px auto; width: 210px; overflow: hidden;')
+		a(href="/login/naver")
+			button.with-naver
+				div.icon
+					img(src=DOMAIN+"/img/social/naver.png")
+				div.login-text= L('withNaver')
+		a(href="/login/facebook")
+			button.with-facebook
+				div.icon
+					img(src=DOMAIN+"/img/social/facebook.png")
+				div.login-text= L('withFacebook')
+		a(href="/login/kakao")
+			button.with-kakao
+				div.icon
+					img(src=DOMAIN+"/img/social/kakao.png")
+				div.login-text= L('withKakao')
+		a(href="/login/twitter")
+			button.with-twitter
+				div.icon
+					img(src=DOMAIN+"/img/social/twitter.png")
+				div.login-text= L('withTwitter')
+		a(href="/login/google")
+			button.with-google
+				div.icon
+					img(src=DOMAIN+"/img/social/google.png")
+				div.login-text= L('withGoogle')
 		div.login-legal!= L('loginLegal')
-		div#fb-root
-		script(type='text/javascript', src='/js/facebook.js')
