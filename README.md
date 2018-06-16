@@ -1,9 +1,11 @@
 # KKuTu Korea
 > 기상천외한 끝말잇기를 웹게임으로! 끄투코리아
 
-[끄투코리아](http://kkutu.co.kr)
+[끄투코리아](https://kkutu.co.kr)
+[디스코드](https://kkutu.co.kr/discord)
 [네이버 카페](http://cafe.naver.com/kkutukorea)
-[페이스북](http://facebook.com/kkutukorea)
+[페이스북](https://fb.com/kkutukorea)
+[유튜브](https://www.youtube.com/%EB%81%84%ED%88%AC%EC%BD%94%EB%A6%AC%EC%95%84)
 
 **끄투코리아**는 GPL 라이센스의 따라 소스를 공개하고 있습니다.
 그에 따라 끄투코리아 또한 소스 사용에 제한을 두고 있습니다.
